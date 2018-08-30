@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.http import HttpRequest,HttpResponse,HttpResponseRedirect
-from django.shortcuts import render_to_response
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, render_to_response, redirect
+from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout
+# 认证模块
+from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
 
-# Create your views here.
-def index(request):
-    return render_to_response("index.html")
+

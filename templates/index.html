@@ -26,6 +26,11 @@
         <ul class="nav sidebar-nav">
             <li class="sidebar-brand">
                 <a href="#">
+                    {{request.user}}
+                </a>
+            </li>
+            <li class="sidebar-brand">
+                <a href="#">
                     Graph Devops
                 </a>
             </li>
@@ -58,6 +63,7 @@
             <span class="hamb-middle"></span>
             <span class="hamb-bottom"></span>
         </button>
+        <a class="col-md-offset-10" href="{% url 'logout' %}">注销登录</a>
         <div class="container">
             <div class="row">
                 <h1>Welcome ansible Devops</h1>

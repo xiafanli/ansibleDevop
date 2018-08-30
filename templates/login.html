@@ -1,0 +1,35 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>LOGIN</title>
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/loginstyle.css' %}">
+
+</head>
+
+<body class="text-center">
+    <form class="form-signin" method="post">
+    {% csrf_token %}
+        <img class="mb-4" src="{% static 'img/login.jpg' %}" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label for="inputEmail" class="sr-only">Email address</label>
+        <input id="inputUser" class="form-control" placeholder="Username" required autofocus name="username">
+        <label id="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" class="form-control" placeholder="Password" required name="password">
+{#        <div class="checkbox mb-3">#}
+{#            <label>#}
+{#                <input type="checkbox" value="remember-me"> Remember me#}
+{#            </label>#}
+{#        </div>#}
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="/login">Sign in</button>
+        <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+    </form>
+</body>
+</html>
