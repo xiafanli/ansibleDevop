@@ -1,10 +1,117 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Devops</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <style>
+        .page-header {
+            padding-bottom: 9px;
+            margin: 20px 0 20px;
+            border-bottom: 1px solid #eee;
+        }
+    </style>
 </head>
 <body>
 
+<div id="wrapper">
+    <div class="overlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top" id="sidebar-wrapper" role="navigation">
+        <ul class="nav sidebar-nav">
+            <li class="sidebar-brand">
+                <a href="#">
+                    Graph Devops
+                </a>
+            </li>
+            <li>
+                <a href="/"><i class="fa fa-fw fa-home"></i> Dashboard</a>
+            </li>
+            <li>
+                <a href="/host"><i class="fa fa-fw fa-folder"></i> Host Center</a>
+            </li>
+            <li>
+                <a href="/devops"><i class="fa fa-fw fa-file-o"></i> Devops Center</a>
+            </li>
+            <li>
+                <a href="/job"><i class="fa fa-fw fa-cog"></i> Job Center</a>
+            </li>
+            <li>
+                <a href="/history"><i class="fa fa-fw fa-cog"></i> History</a>
+            </li>
+            <li>
+                <a href="/report"><i class="fa fa-fw fa-cog"></i> Report</a>
+            </li>
+        </ul>
+    </nav>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+        <button type="button" class="hamburger is-closed animated fadeInLeft" data-toggle="offcanvas">
+            <span class="hamb-top"></span>
+            <span class="hamb-middle"></span>
+            <span class="hamb-bottom"></span>
+        </button>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 col-lg-offset-1">
+                    <h1 class="page-header">DashBoard</h1>
+                    <h1 class="page-header">Devoloping</h1>
+                    <form name="input" action="/" method="post">
+                        talk:
+                        <input type="text" name="talk"/>
+                        <input type="submit" value="send"/>
+                    </form>
+                    <ul>
+                        {%for i in items%}
+                        <i>{{escape(i)}}</i>
+                        {%end%}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+<script src="../static/js/jquery-1.11.3.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var trigger = $('.hamburger'),
+                overlay = $('.overlay'),
+                isClosed = false;
+
+        trigger.click(function () {
+            hamburger_cross();
+        });
+
+        function hamburger_cross() {
+
+            if (isClosed == true) {
+                overlay.hide();
+                trigger.removeClass('is-open');
+                trigger.addClass('is-closed');
+                isClosed = false;
+            } else {
+                overlay.show();
+                trigger.removeClass('is-closed');
+                trigger.addClass('is-open');
+                isClosed = true;
+            }
+        }
+
+        $('[data-toggle="offcanvas"]').click(function () {
+            $('#wrapper').toggleClass('toggled');
+        });
+    });
+</script>
 </body>
 </html>
