@@ -95,8 +95,9 @@ html {
   background-color: #1a1a1a;
   color: #ffffff;
 }
-.sidebar-nav li:nth-child(2):before {
-  background-color: #402d5c;
+.sidebar-nav li:nth-child(2) a {
+  background-color: #1a1a1a;
+  color: #ffffff;
 }
 .sidebar-nav li:nth-child(3):before {
   background-color: #4c366d;
@@ -160,6 +161,7 @@ html {
   height: 65px;
   line-height: 44px;
 }
+
 /*-------------------------------*/
 /*       Hamburger-Cross         */
 /*-------------------------------*/

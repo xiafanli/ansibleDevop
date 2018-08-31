@@ -10,3 +10,17 @@ from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 
 
+from rest_framework import generics
+
+from .models import ServerInfo
+from .serializers import ServerInfoSerializer
+
+
+class ListTodo(generics.ListCreateAPIView):
+    queryset = ServerInfo.objects.all()
+    serializer_class = ServerInfoSerializer
+
+
+class DetailTodo(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ServerInfo.objects.all()
+    serializer_class = ServerInfoSerializer
