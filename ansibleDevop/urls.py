@@ -20,11 +20,19 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import TemplateView
+from cmdb.views import serverinfo_list,serverinfo_detail
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    # """
+    # the following three lines in use for the login page
+    # """
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='home'),
     url(r'^login$', auth_views.login, {'template_name': 'login.html'}, name='login'),
     url(r'^logout$', auth_views.logout, {'template_name': 'login.html'}, name='logout'),
-    url('api/', include('cmdb.api_url'))
+    # """
+    # the following two lines is use for restful interface of
+    # """
+    url(r'^api/$', serverinfo_list),
+    url('^api/(?P<pk>[0-9]+)/$', serverinfo_detail),
 ]

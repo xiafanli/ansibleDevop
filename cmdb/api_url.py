@@ -4,6 +4,6 @@ from . import views
 from . import views
 
 urlpatterns = [
-    url('', views.ListTodo.as_view()),
-    url('<string:pk>/', views.DetailTodo.as_view()),
+    url('', views.serverinfo_list),
+    url('^(?P<pk>[0-9]+)/$', views.serverinfo_detail),
 ]
