@@ -14,7 +14,7 @@ from .models import ServerInfo
 from .serializers import ServerInfoSerializer
 
 """
-Demo 1
+Demo 1 start here
 """
 # class ListTodo(generics.ListCreateAPIView):
 #     queryset = ServerInfo.objects.all()
@@ -25,7 +25,7 @@ Demo 1
 #     serializer_class = ServerInfoSerializer
 
 """
-This view start here
+Demo 2 start here
 """
 @csrf_exempt
 def serverinfo_list(request):
@@ -35,6 +35,7 @@ def serverinfo_list(request):
     if request.method == 'GET':
         serverinfo = ServerInfo.objects.all()
         serializer = ServerInfoSerializer(serverinfo, many=True)
+        # return JsonResponse(serializer.data, safe=False)
         return JsonResponse(serializer.data, safe=False)
 
     elif request.method == 'POST':
