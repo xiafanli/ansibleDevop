@@ -31,8 +31,13 @@ urlpatterns = [
     url(r'^login$', auth_views.login, {'template_name': 'login.html'}, name='login'),
     url(r'^logout$', auth_views.logout, {'template_name': 'login.html'}, name='logout'),
     # """
-    # the following two lines is use for restful interface of
+    # the following two lines is use for restful interface demo2
     # """
-    url(r'^api/$', serverinfo_list),
-    url('^api/(?P<pk>[0-9]+)/$', serverinfo_detail),
+    url(r'^apid2/$', serverinfo_list),
+    url('^apid2/(?P<pk>[0-9]+)/$', serverinfo_detail),
+    # """
+    # the following two lines is use for restful interface demo3
+    # """
+    url(r'^apid3/$', ServerinfoListD3.as_view()),
+    url('^apid3/(?P<pk>[0-9]+)/$', ServerinfoDetailD3.as_view()),
 ]

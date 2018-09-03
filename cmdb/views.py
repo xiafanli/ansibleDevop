@@ -73,3 +73,13 @@ def serverinfo_detail(request, pk):
         serverinfo.delete()
         return HttpResponse(status=204)
 
+
+class ServerinfoListD3(generics.ListCreateAPIView):
+    queryset = ServerInfo.objects.all()
+    serializer_class = ServerInfoSerializer
+
+
+class ServerinfoDetailD3(generics.RetrieveUpdateDestroyAPIView):
+    queryset = ServerInfo.objects.all()
+    serializer_class = ServerInfoSerializer
+
