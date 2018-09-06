@@ -20,7 +20,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.views.generic.base import TemplateView
-from cmdb.views import serverinfo_list,serverinfo_detail
+from cmdb.views import serverinfo_list, serverinfo_detail
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -34,10 +34,10 @@ urlpatterns = [
     # the following two lines is use for restful interface demo2
     # """
     url(r'^apid2/$', serverinfo_list),
-    url('^apid2/(?P<pk>[0-9]+)/$', serverinfo_detail),
+    url(r'^apid2/(?P<pk>[0-9]+)/$', serverinfo_detail),
     # """
     # the following two lines is use for restful interface demo3
     # """
     url(r'^apid3/$', ServerinfoListD3.as_view()),
-    url('^apid3/(?P<pk>[0-9]+)/$', ServerinfoDetailD3.as_view()),
+    url(r'^apid3/(?P<pk>[0-9]+)/$', ServerinfoDetailD3.as_view()),
 ]
