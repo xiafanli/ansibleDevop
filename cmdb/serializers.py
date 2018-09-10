@@ -13,6 +13,7 @@ class ServerInfoSerializer(serializers.Serializer):
     rack_id = serializers.CharField(required=False, allow_blank=True)
     numcpu = serializers.CharField(required=True, allow_blank=False)
     nummem = serializers.CharField(required=True, allow_blank=False)
+    server_type = serializers.CharField(required=True, allow_blank=False)
 
 class ServerInfoModelSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,6 +26,7 @@ class ServerInfoModelSerializer(serializers.ModelSerializer):
             'rack_id',
             'numcpu',
             'nummem',
+            'server_type',
         )
 
     def create(self, validated_date):
@@ -45,5 +47,6 @@ class ServerInfoModelSerializer(serializers.ModelSerializer):
         instance.rack_id = validated_date.get('rack_id', instance.rack_id)
         instance.numcpu = validated_date.get('numcpu', instance.numcpu)
         instance.nummem = validated_date.get('nummem', instance.nummem)
+        instance.server_type = validated_date.get('servertype', instance.server_type)
         instance.save()
         return instance

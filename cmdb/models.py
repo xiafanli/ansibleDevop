@@ -13,6 +13,8 @@ class ServerInfo(models.Model):
     rack_id = models.CharField(max_length=10, default="")
     numcpu = models.CharField(max_length=10, default="")
     nummem = models.CharField(max_length=10, default="")
+    SERVER_TYPE = [('physical', 'physical'), ('virtual', 'virtual')]
+    server_type = models.CharField(max_length=10, choices=SERVER_TYPE, default="physical")
     # created = models.DateTimeField(auto_now_add=True)
     # updated = models.DateTimeField(auto_now_add=True)
     #
