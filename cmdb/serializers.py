@@ -13,7 +13,8 @@ class ServerInfoSerializer(serializers.Serializer):
     rack_id = serializers.CharField(required=False, allow_blank=True)
     numcpu = serializers.CharField(required=True, allow_blank=False)
     nummem = serializers.CharField(required=True, allow_blank=False)
-    server_type = serializers.CharField(required=True, allow_blank=False)
+    server_type = serializers.ChoiceField(choices=[('physical', 'physical'), ('virtual', 'virtual')], required=True, allow_blank=False)
+
 
 class ServerInfoModelSerializer(serializers.ModelSerializer):
     class Meta:

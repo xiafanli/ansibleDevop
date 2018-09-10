@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import generics
 
 from .models import ServerInfo
-from .serializers import ServerInfoSerializer
+from .serializers import ServerInfoSerializer, ServerInfoModelSerializer
 
 """
 Demo 1 start here
@@ -76,10 +76,10 @@ def serverinfo_detail(request, pk):
 
 class ServerinfoListD3(generics.ListCreateAPIView):
     queryset = ServerInfo.objects.all()
-    serializer_class = ServerInfoSerializer
+    serializer_class = ServerInfoModelSerializer
 
 
 class ServerinfoDetailD3(generics.RetrieveUpdateDestroyAPIView):
     queryset = ServerInfo.objects.all()
-    serializer_class = ServerInfoSerializer
+    serializer_class = ServerInfoModelSerializer
 
