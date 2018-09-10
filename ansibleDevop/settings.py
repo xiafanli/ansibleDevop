@@ -78,14 +78,21 @@ WSGI_APPLICATION = 'ansibleDevop.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'djangoproject',
+#         'HOST': '10.0.0.254',
+#         'PORT': '3306',
+#         'USER': 'root',
+#         'PASSWORD': 'summer',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'djangoproject',
-        'HOST': '10.0.0.254',
-        'PORT': '3306',
-        'USER': 'root',
-        'PASSWORD': 'summer',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'db.sqlite3',
     }
 }
 
