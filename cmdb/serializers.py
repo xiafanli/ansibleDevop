@@ -48,6 +48,6 @@ class ServerInfoModelSerializer(serializers.ModelSerializer):
         instance.rack_id = validated_date.get('rack_id', instance.rack_id)
         instance.numcpu = validated_date.get('numcpu', instance.numcpu)
         instance.nummem = validated_date.get('nummem', instance.nummem)
-        instance.server_type = validated_date.get('servertype', instance.server_type)
+        instance.server_type = validated_date.get('server_type', instance.server_type)
         instance.save()
         return instance
