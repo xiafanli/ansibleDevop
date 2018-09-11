@@ -30,24 +30,25 @@ class ServerInfoModelSerializer(serializers.ModelSerializer):
             'server_type',
         )
 
-    def create(self, validated_date):
-        """
-        Create and return a Serverinfo instance
-        :param validated_date:
-        :return:
-        """
-        return ServerInfo.objects.create(**validated_date)
-
-    def update(self, instance, validated_date):
-        """
-        Update and return and exsiting instance 'Serverinfo instance'
-        """
-        instance.hostname = validated_date.get('hostanme', instance.hostname)
-        instance.ipaddress = validated_date.get('ipaddress', instance.ipaddress)
-        instance.serial = validated_date.get('serial', instance.serial)
-        instance.rack_id = validated_date.get('rack_id', instance.rack_id)
-        instance.numcpu = validated_date.get('numcpu', instance.numcpu)
-        instance.nummem = validated_date.get('nummem', instance.nummem)
-        instance.server_type = validated_date.get('server_type', instance.server_type)
-        instance.save()
-        return instance
+    # def create(self, validated_date):
+    #     """
+    #     Create and return a Serverinfo instance
+    #     :param validated_date:
+    #     :return:
+    #     """
+    #     print(validated_date)
+    #     return ServerInfo.objects.create(**validated_date)
+    #
+    # def update(self, instance, validated_date):
+    #     """
+    #     Update and return and exsiting instance 'Serverinfo instance'
+    #     """
+    #     instance.hostname = validated_date.get('hostanme', instance.hostname)
+    #     instance.ipaddress = validated_date.get('ipaddress', instance.ipaddress)
+    #     instance.serial = validated_date.get('serial', instance.serial)
+    #     instance.rack_id = validated_date.get('rack_id', instance.rack_id)
+    #     instance.numcpu = validated_date.get('numcpu', instance.numcpu)
+    #     instance.nummem = validated_date.get('nummem', instance.nummem)
+    #     instance.server_type = validated_date.get('server_type', instance.server_type)
+    #     instance.save()
+    #     return instance

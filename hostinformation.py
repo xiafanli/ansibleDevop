@@ -2,10 +2,11 @@ import  requests
 import subprocess
 import json
 import re
-import socket
+from decimal import *
 
 
 ip_exp = re.compile(u'10(\.(2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})){3}')
+headers = {'content-type': 'application/json'}
 
 
 def runCommand(cmd):
@@ -13,44 +14,41 @@ def runCommand(cmd):
     return output.communicate()[0]
 
 
-def postData(url, data):
-    headers = {'content-type': 'application/json'}
-    request = requests.post(url, data=json.dumps(data), headers=headers)
-    return request
-
-
-data = {
-    "hostname": "master2",
-    "ipaddress": "10.0.0.111",
-    "serial": "J3DKJ",
-    "rack_id": "B404",
-    "numcpu": "48",
-    "nummem": "256",
-    "server_type": "physical"
-}
-
-
 def main():
     # Frist get all server info value
-    hostname = runCommand("hostname")
-    ip = re.search(runCommand("ifconfig"))
-    cpunum = runCommand("more /proc/cpuinfo  |grep process |wc -l")
-    memnum = runCommand("more /proc/meminfo  |grep process |wc -l")
-    serial = runCommand("dmidecode -t 1 |grep Serial number")
-    if serial.startswith("VMware"):
-        server_type = "virtual"
+    hostname = runCommand('hostname').strip()
+    ip = ip_exp.search(runCommand('ifconfig')).group()
+    cpunum = runCommand('more /proc/cpuinfo  |grep process |wc -l').strip()
+    memnum = Decimal(int(runCommand("more /proc/meminfo  |grep MemTotal |awk '{print $2}'"))/1024/1024)
+    serial = runCommand("dmidecode -t 1 |grep 'Serial Number'|awk -F: '{print $2}'").strip()
+    if serial.startswith('VMware') or serial == '0':
+        server_type = 'virtual'
+        data = {
+             "hostname": hostname,
+             "ipaddress": ip,
+             "numcpu": cpunum,
+             "nummem": str(memnum),
+             "server_type": server_type}
     else:
-        server_type = "physical"
+        server_type = 'physical'
+        data = {
+             "hostname": hostname,
+             "ipaddress": ip,
+             "serial": serial,
+             "numcpu": cpunum,
+             "nummem": str(memnum),
+             "server_type": server_type}
+    print(data)
     # fetch from ip
-    url = "http://10.0.0.254:8888/apid3/fetch/"
-    request = requests.get(url + ip)
-    print(request.status_code)
-    data = {
-        "hostname": hostname,
-        "ipaddress": ip,
-        "serial": "J3DKJ",
-        "rack_id": "B404",
-        "numcpu": "48",
-        "nummem": "256",
-        "server_type": "physical"
-    }
+    url = 'http://10.0.0.254:8888/apid3/'
+    request = requests.get(url +  'fetch/?ipaddress='  + ip)
+    if len(json.loads(request.content)) == 0:
+        print("step1")
+        requests.post(url, data=json.dumps(data), headers=headers)
+    else:
+        print("step 2")
+        pk = json.loads(request.content)[0]['id']
+        requests.put(url +  str(pk) + "/", headers=headers, data=json.dumps(data))
+
+if __name__ == "__main__":
+    main()
