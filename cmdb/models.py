@@ -9,8 +9,8 @@ from django.db import models
 class ServerInfo(models.Model):
     hostname = models.CharField(max_length=30)
     ipaddress = models.CharField(max_length=16)
-    serial = models.CharField(max_length=10, default="")
-    rack_id = models.CharField(max_length=10, default="")
+    serial = models.CharField(max_length=10, null=True, default="", blank=True)
+    rack_id = models.CharField(max_length=10,null=True, default="", blank=True)
     numcpu = models.CharField(max_length=10, default="")
     nummem = models.CharField(max_length=10, default="")
     SERVER_TYPE = [('physical', 'physical'), ('virtual', 'virtual')]
