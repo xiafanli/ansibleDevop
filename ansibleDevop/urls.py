@@ -16,7 +16,7 @@ Including another URLconf
 
 from cmdb.views import *
 
-from django.conf.urls import url, include
+from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import login, logout
 from django.views.generic.base import TemplateView
@@ -40,4 +40,5 @@ urlpatterns = [
     # """
     url(r'^apid3/$', ServerinfoListD3.as_view()),
     url(r'^apid3/(?P<pk>[0-9]+)/$', ServerinfoDetailD3.as_view()),
+    url(r'^apid3/fetch/$', ServerinfoFectchOneD3.as_view())
 ]

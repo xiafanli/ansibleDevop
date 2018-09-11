@@ -79,6 +79,17 @@ class ServerinfoListD3(generics.ListCreateAPIView):
     serializer_class = ServerInfoModelSerializer
 
 
+class ServerinfoFectchOneD3(generics.ListAPIView):
+    serializer_class = ServerInfoModelSerializer
+
+    def get_queryset(self):
+        queryset = ServerInfo.objects.all()
+        ip = self.request.query_params.get("ipaddress", None)
+        if ip is not None:
+            queryset = ServerInfo.objects.filter(ipaddress=ip)
+        return queryset
+
+
 class ServerinfoDetailD3(generics.RetrieveUpdateDestroyAPIView):
     queryset = ServerInfo.objects.all()
     serializer_class = ServerInfoModelSerializer
