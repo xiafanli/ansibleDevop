@@ -41,14 +41,15 @@ def main():
     print(data)
     # fetch from ip
     url = 'http://10.0.0.254:8888/apid3/'
-    request = requests.get(url +  'fetch/?ipaddress='  + ip)
+    request = requests.get(url + 'fetch/?ipaddress=' + ip)
     if len(json.loads(request.content)) == 0:
         print("step1")
         requests.post(url, data=json.dumps(data), headers=headers)
     else:
         print("step 2")
         pk = json.loads(request.content)[0]['id']
-        requests.put(url +  str(pk) + "/", headers=headers, data=json.dumps(data))
+        requests.put(url + str(pk) + "/", headers=headers, data=json.dumps(data))
+
 
 if __name__ == "__main__":
     main()
