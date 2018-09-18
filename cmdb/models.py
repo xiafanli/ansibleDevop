@@ -7,7 +7,7 @@ from django.db import models
 # Create your models here.
 
 
-class ServerInfo(models.Model):
+class HostBasicInfo(models.Model):
     hostname = models.CharField(max_length=30)
     ipaddress = models.CharField(max_length=16)
     serial = models.CharField(max_length=10, null=True, default="", blank=True)
@@ -30,7 +30,7 @@ class ClusterBasicInfo(models.Model):
     cluster_type = models.CharField(max_length=30)
     cluster_version = models.CharField(max_length=30, default="", blank=True, null=True)
 
-class CLusterIpMapping(models.Model):
+
+class CLusterHostMapping(models.Model):
     cluster_id = models.ForeignKey(ClusterBasicInfo, related_name="mapping_basic", on_delete=models.CASCADE)
     ip_address = models.CharField(max_length=16)
-

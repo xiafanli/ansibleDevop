@@ -2,13 +2,13 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import ServerInfo, CLusterIpMapping, ClusterBasicInfo
+from .models import HostBasicInfo, ClusterBasicInfo, CLusterHostMapping
 
 
 # Register your models here.
 
 
-class ServerInfoAdmin(admin.ModelAdmin):
+class HostBasicInfoAdmin(admin.ModelAdmin):
     list_display = [
         "hostname",
         "ipaddress",
@@ -20,11 +20,11 @@ class ServerInfoAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(ServerInfo, ServerInfoAdmin)
+admin.site.register(HostBasicInfo, HostBasicInfoAdmin)
 
 
 class ClusterInfoAdmin(admin.StackedInline):
-    model = CLusterIpMapping
+    model = CLusterHostMapping
     extra = 0
 
 

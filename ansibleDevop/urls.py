@@ -20,7 +20,7 @@ from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth import login, logout
 from django.views.generic.base import TemplateView
-from cmdb.views import serverinfo_list, serverinfo_detail
+from cmdb.views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -31,14 +31,9 @@ urlpatterns = [
     url(r'^login$', login, {'template_name': 'login.html'}, name='login'),
     url(r'^logout$', logout, {'template_name': 'login.html'}, name='logout'),
     # """
-    # the following two lines is use for restful interface demo2
+    # the following two lines is use for restful interface
     # """
-    url(r'^apid2/$', serverinfo_list),
-    url(r'^apid2/(?P<pk>[0-9]+)/$', serverinfo_detail),
-    # """
-    # the following two lines is use for restful interface demo3
-    # """
-    url(r'^apid3/$', ServerinfoListD3.as_view()),
-    url(r'^apid3/(?P<pk>[0-9]+)/$', ServerinfoDetailD3.as_view()),
-    url(r'^apid3/fetch/$', ServerinfoFectchOneD3.as_view())
+    url(r'^api/$', HostBasicInfoList.as_view()),
+    url(r'^api/(?P<pk>[0-9]+)/$', HostBasicInfoDetail.as_view()),
+    url(r'^api/fetch/$', HostBasicInfoFetchOne.as_view())
 ]

@@ -40,7 +40,7 @@ def main():
              "server_type": server_type}
     print(data)
     # fetch from ip
-    url = 'http://10.0.0.254:8888/apid3/'
+    url = 'http://10.0.0.254:8888/api/'
     request = requests.get(url + 'fetch/?ipaddress=' + ip)
     if len(json.loads(request.content)) == 0:
         print("step1")
