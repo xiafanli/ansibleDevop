@@ -33,5 +33,5 @@ class ClusterBasicInfo(models.Model):
 
 
 class ClusterHostMapping(models.Model):
-    cluster_id = models.ForeignKey(ClusterBasicInfo, related_name="mapping_basic", on_delete=models.CASCADE)
-    ip_address = models.ForeignKey(HostBasicInfo, related_name="host_cluster", on_delete=models.CASCADE)
+    clusterinfo = models.ForeignKey(ClusterBasicInfo, related_name="mapping_basic", on_delete=models.CASCADE)
+    hostinfo = models.ForeignKey(HostBasicInfo, related_name="host_cluster", on_delete=models.CASCADE)
