@@ -14,6 +14,7 @@ class ServerInfo(models.Model):
     rack_id = models.CharField(max_length=10, null=True, default="", blank=True)
     numcpu = models.CharField(max_length=10, default="")
     nummem = models.CharField(max_length=10, default="")
+    osversion = models.CharField(max_length=30, null=True, default="", blank=True)
     SERVER_TYPE = [('physical', 'physical'), ('virtual', 'virtual')]
     server_type = models.CharField(max_length=10, choices=SERVER_TYPE, default="physical")
     # created = models.DateTimeField(auto_now_add=True)
@@ -27,7 +28,7 @@ class ClusterBasicInfo(models.Model):
     cluster_id = models.IntegerField(primary_key=True)
     cluster_name = models.CharField(max_length=16)
     cluster_type = models.CharField(max_length=30)
-    cluster_version = models.CharField(max_length=30,default="", blank=True, null=True)
+    cluster_version = models.CharField(max_length=30, default="", blank=True, null=True)
 
 class CLusterIpMapping(models.Model):
     cluster_id = models.ForeignKey(ClusterBasicInfo, related_name="mapping_basic", on_delete=models.CASCADE)

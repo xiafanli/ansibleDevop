@@ -28,6 +28,7 @@ class ServerInfoModelSerializer(serializers.ModelSerializer):
             'numcpu',
             'nummem',
             'server_type',
+            'osversion'
         )
 
     # def create(self, validated_date):
