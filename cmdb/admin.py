@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import HostBasicInfo, ClusterBasicInfo, CLusterHostMapping
+from .models import HostBasicInfo, ClusterBasicInfo, ClusterHostMapping
 
 
 # Register your models here.
@@ -16,7 +16,8 @@ class HostBasicInfoAdmin(admin.ModelAdmin):
         "rack_id",
         "numcpu",
         "nummem",
-        "server_type"
+        "server_type",
+        "osversion"
     ]
 
 
@@ -24,7 +25,7 @@ admin.site.register(HostBasicInfo, HostBasicInfoAdmin)
 
 
 class ClusterInfoAdmin(admin.StackedInline):
-    model = CLusterHostMapping
+    model = ClusterHostMapping
     extra = 0
 
 

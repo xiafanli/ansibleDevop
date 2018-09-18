@@ -29,8 +29,9 @@ class ClusterBasicInfo(models.Model):
     cluster_name = models.CharField(max_length=16)
     cluster_type = models.CharField(max_length=30)
     cluster_version = models.CharField(max_length=30, default="", blank=True, null=True)
+    host_info = models.ManyToManyField(HostBasicInfo, through="ClusterHostMapping")
 
 
-class CLusterHostMapping(models.Model):
+class ClusterHostMapping(models.Model):
     cluster_id = models.ForeignKey(ClusterBasicInfo, related_name="mapping_basic", on_delete=models.CASCADE)
-    ip_address = models.CharField(max_length=16)
+    ip_address = models.ForeignKey(HostBasicInfo, related_name="host_cluster", on_delete=models.CASCADE)
