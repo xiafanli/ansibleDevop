@@ -15,12 +15,12 @@ Including another URLconf
 """
 
 from cmdb.views import *
-
 from django.conf.urls import url
 from django.contrib import admin
-from django.contrib.auth import login, logout
-from django.views.generic.base import TemplateView
+from django.contrib.auth.views import LoginView, LogoutView
+from django.views.generic import TemplateView
 from cmdb.views import *
+from django.conf import settings
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -28,8 +28,9 @@ urlpatterns = [
     # the following three lines in use for the login page
     # """
     url(r'^$', TemplateView.as_view(template_name='index.html'), name='home'),
-    url(r'^login$', login, {'template_name': 'login.html'}, name='login'),
-    url(r'^logout$', logout, {'template_name': 'login.html'}, name='logout'),
+    url(r'^login$', LoginView.as_view(), name='login'),
+    url(r'^logout$', LogoutView.as_view(), name='logout'),
+    url(r'^cluster$', ClusterInfoView, name='cluster'),
     # """
     # the following two lines is use for restful interface
     # """

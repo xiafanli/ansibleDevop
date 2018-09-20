@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import HostBasicInfo
+from .models import HostBasicInfo, ClusterBasicInfo
 
 
 class HostBasicInfoModelSerializer(serializers.ModelSerializer):
@@ -15,4 +15,14 @@ class HostBasicInfoModelSerializer(serializers.ModelSerializer):
             'nummem',
             'server_type',
             'osversion'
+        )
+
+class ClusterBasicInfooModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClusterBasicInfo
+        fields = (
+            'cluster_id',
+            'cluster_name',
+            'cluster_type',
+            'cluster_version'
         )
