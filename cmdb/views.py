@@ -5,9 +5,8 @@ from .models import HostBasicInfo
 from .serializers import HostBasicInfoModelSerializer
 from django.http import HttpResponse
 from cmdb.models import ClusterBasicInfo
-from django.shortcuts import render,render_to_response
-import json
-
+from django.shortcuts import render
+from django.conf import settings
 
 #vire interface
 def ClusterInfoView(request):
@@ -26,11 +25,9 @@ def ClusterInfoView(request):
         AllclusterObject = ClusterBasicInfo.objects.all().order_by("cluster_id")
     else:
         AllclusterObject = ClusterBasicInfo.objects.all().order_by("cluster_id")
-    print(len(AllclusterObject))
-    clusterObjectList = [clusterObject.format() for clusterObject in AllclusterObject]
-    return render(request, "manager.html", {"AllclusterObject": AllclusterObject})
-    #return render(request, "manager.html", {"clusterObjectList": clusterObjectList})
-    #return HttpResponse(json.dumps({"clusterObjectList": clusterObjectList}))
+    return render(request, "manager.html", {"AllclusterObject": AllclusterObject, "cluster_type": settings.CLUSTER_TYPE})
+
+# def HostInfoView(request):
 
 
 #rest interface

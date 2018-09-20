@@ -6,7 +6,6 @@ from django.db import models
 
 # Create your models here.
 
-
 class HostBasicInfo(models.Model):
     hostname = models.CharField(max_length=30,  null=True, default="", blank=True)
     ipaddress = models.CharField(max_length=16)
@@ -30,14 +29,6 @@ class ClusterBasicInfo(models.Model):
     cluster_type = models.CharField(max_length=30)
     cluster_version = models.CharField(max_length=30, default="", blank=True, null=True)
     host_info = models.ManyToManyField(HostBasicInfo, through="ClusterHostMapping")
-
-    def format(self):
-        return {
-            'cluster_id': self.cluster_id,
-            'cluster_name': self.cluster_name,
-            'cluster_type': self.cluster_type,
-            'cluster_version': self.cluster_version,
-        }
 
 
 class ClusterHostMapping(models.Model):
