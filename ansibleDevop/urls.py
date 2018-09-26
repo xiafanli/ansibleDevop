@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^login$', LoginView.as_view(), name='login'),
     url(r'^logout$', LogoutView.as_view(), name='logout'),
     url(r'^cluster$', ClusterInfoView, name='cluster'),
+    url(r'^host', HostInfoView, name='cluster'),
     # """
     # the following two lines is use for restful interface
     # """

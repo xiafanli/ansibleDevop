@@ -8,7 +8,8 @@ from cmdb.models import ClusterBasicInfo
 from django.shortcuts import render
 from django.conf import settings
 
-#vire interface
+
+# view interface
 def ClusterInfoView(request):
     if request.method == "POST":
         cluster_id = request.POST['cluster_id']
@@ -27,10 +28,13 @@ def ClusterInfoView(request):
         AllclusterObject = ClusterBasicInfo.objects.all().order_by("cluster_id")
     return render(request, "manager.html", {"AllclusterObject": AllclusterObject, "cluster_type": settings.CLUSTER_TYPE})
 
-# def HostInfoView(request):
+
+def HostInfoView(request):
+    AllhostObject = HostBasicInfo.objects.all().order_by("ipaddress")
+    return render(request, 'host.html', {"AllhostObject": AllhostObject})
 
 
-#rest interface
+# rest interface
 class HostBasicInfoList(generics.ListCreateAPIView):
     queryset = HostBasicInfo.objects.all()
     serializer_class = HostBasicInfoModelSerializer

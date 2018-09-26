@@ -42,7 +42,7 @@
                 <a href="/host"><i class="fa fa-fw fa-folder"></i> Host Center</a>
             </li>
             <li>
-                <a href="/cluster$"><i class="fa fa-fw fa-file-o"></i> Cluster Center</a>
+                <a href="/cluster"><i class="fa fa-fw fa-file-o"></i> Cluster Center</a>
             </li>
             {#            <li>#}
             {#                <a href="/job"><i class="fa fa-fw fa-cog"></i> Job Center</a>#}
@@ -67,65 +67,73 @@
         <a class="col-md-offset-10" href="{% url 'logout' %}">注销登录</a>
         <div class="container">
             <div class="row">
-                <h1>Manager Page</h1>
+                <h1>大数据主机信息</h1>
             </div>
-            <div class="row">
-                <form action="cluster" method="post">
-                    {% csrf_token %}
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Cluster ID</label>
-                            <input type="text" class="form-control" name="cluster_id" placeholder="Cluster ID">
-                            <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Cluster Name</label>
-                            <input type="text" class="form-control" name="cluster_name" placeholder="Cluster Name">
-                            <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Cluster Type</label>
-{#                            <input type="text" class="form-control" name="cluster_type" placeholder="Cluster Type">#}
-                            <select id="inputState" class="form-control">
-                                {% for type in cluster_type %}
-                                <option>{{ type }}</option>
-                                {% endfor %}
-                            </select>
-                            <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Cluster Version</label>
-                            <input type="text" class="form-control" name="cluster_version"
-                                   placeholder="Cluster Version">
-                            <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>
-                        </div>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
+            {#            <div class="row">#}
+            {#                <form action="cluster" method="post">#}
+            {#                    {% csrf_token %}#}
+            {#                    <div class="form-row">#}
+            {#                        <div class="form-group col-md-6">#}
+            {#                            <label>Cluster ID</label>#}
+            {#                            <input type="text" class="form-control" name="cluster_id" placeholder="Cluster ID">#}
+            {#                            <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>#}
+            {#                        </div>#}
+            {#                        <div class="form-group col-md-6">#}
+            {#                            <label>Cluster Name</label>#}
+            {#                            <input type="text" class="form-control" name="cluster_name" placeholder="Cluster Name">#}
+            {#                            <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>#}
+            {#                        </div>#}
+            {#                    </div>#}
+            {#                    <div class="form-row">#}
+            {#                        <div class="form-group col-md-6">#}
+            {#                            <label>Cluster Type</label>#}
+            {#                            <input type="text" class="form-control" name="cluster_type" placeholder="Cluster Type">#}
+            {#                            <select id="inputState" class="form-control">#}
+            {#                                {% for type in cluster_type %}#}
+            {#                                    <option>{{ type }}</option>#}
+            {#                                {% endfor %}#}
+            {#                            </select>#}
+            {#                            <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>#}
+            {#                        </div>#}
+            {#                        <div class="form-group col-md-6">#}
+            {#                            <label>Cluster Version</label>#}
+            {#                            <input type="text" class="form-control" name="cluster_version"#}
+            {#                                   placeholder="Cluster Version">#}
+            {#                            <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>#}
+            {#                        </div>#}
+            {#                    </div>#}
+            {#                    <div class="form-group col-md-6">#}
+            {#                        <button type="submit" class="btn btn-primary">Submit</button>#}
+            {#                    </div>#}
+            {##}
+            {#                </form>#}
+            {#            </div>#}
 
-                </form>
-            </div>
-
             <div class="row">
-                <table id="hdfs-table" data-toggle="table">
+                <table id="hdfs-table" data-toggle="table" data-pagination="true" data-search="true">
                     <thead>
                     <tr>
-                        <th>集群ID</th>
-                        <th data-field="name">集群名称</th>
-                        <th>集群类型</th>
-                        <th>集群版本</th>
+                        <th>主机名</th>
+                        <th data-field="name">IP地址</th>
+                        <th>序列号</th>
+                        <th>机架号</th>
+                        <th>CPU数</th>
+                        <th>内存数</th>
+                        <th>OS版本</th>
+                        <th>服务器类型</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {% for object in AllclusterObject %}
+                    {% for object in AllhostObject %}
                         <tr>
-                            <td>{{ object.cluster_id }}</td>
-                            <td>{{ object.cluster_name }}</td>
-                            <td>{{ object.cluster_type }}</td>
-                            <td>{{ object.cluster_version }}</td>
+                            <td>{{ object.hostname }}</td>
+                            <td>{{ object.ipaddress }}</td>
+                            <td>{{ object.serial }}</td>
+                            <td>{{ object.rack_id }}</td>
+                            <td>{{ object.numcpu }}</td>
+                            <td>{{ object.nummem }}</td>
+                            <td>{{ object.osversion }}</td>
+                            <td>{{ object.server_type }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
@@ -141,6 +149,7 @@
 <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'bootstraptable/bootstrap-table.min.js' %}"></script>
+<script src="{% static 'bootstraptable/extensions/toolbar/bootstrap-table-toolbar.min.js' %}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         var trigger = $('.hamburger'),
