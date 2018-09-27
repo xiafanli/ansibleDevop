@@ -110,7 +110,12 @@
             {#            </div>#}
 
             <div class="row">
-                <table id="hdfs-table" data-toggle="table" data-pagination="true" data-search="true">
+                <table id="hdfs-table"
+                       data-toggle="table"
+                       data-pagination="true"
+                       data-search="true"
+                       data-detail-view="true"
+                       data-detail-formatter="detailFormatter">
                     <thead>
                     <tr>
                         <th>主机名</th>
@@ -127,7 +132,7 @@
                     {% for object in AllhostObject %}
                         <tr>
                             <td>{{ object.hostname }}</td>
-                            <td>{{ object.ipaddress }}</td>
+                            <td data-field="name">{{ object.ipaddress }}</td>
                             <td>{{ object.serial }}</td>
                             <td>{{ object.rack_id }}</td>
                             <td>{{ object.numcpu }}</td>
@@ -150,6 +155,16 @@
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'bootstraptable/bootstrap-table.min.js' %}"></script>
 <script src="{% static 'bootstraptable/extensions/toolbar/bootstrap-table-toolbar.min.js' %}"></script>
+<script>
+    function detailFormatter(index, row) {
+        var html = [];
+        console.log(row.name);
+        $.each(row, function (key, value) {
+            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
+        });
+        return html.join('');
+    }
+</script>
 <script type="text/javascript">
     $(document).ready(function () {
         var trigger = $('.hamburger'),
@@ -178,8 +193,6 @@
         $('[data-toggle="offcanvas"]').click(function () {
             $('#wrapper').toggleClass('toggled');
         });
-
-
     });
 </script>
 </body>
