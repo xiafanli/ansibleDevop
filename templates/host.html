@@ -159,9 +159,7 @@
     function detailFormatter(index, row) {
         var html = [];
         console.log(row.name);
-        $.each(row, function (key, value) {
-            html.push('<p><b>' + key + ':</b> ' + value + '</p>');
-        });
+        html.push('<b style="text-align: left">'  + row.name + ' </b>');
         return html.join('');
     }
 </script>
