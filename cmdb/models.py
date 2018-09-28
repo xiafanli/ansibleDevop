@@ -7,20 +7,28 @@ from django.db import models
 # Create your models here.
 
 class HostBasicInfo(models.Model):
-    hostname = models.CharField(max_length=30,  null=True, default="", blank=True)
-    ipaddress = models.CharField(max_length=16)
+    host_name = models.CharField(max_length=30,  null=True, default="", blank=True)
+    ip_address = models.CharField(max_length=16)
     serial = models.CharField(max_length=10, null=True, default="", blank=True)
     rack_id = models.CharField(max_length=10, null=True, default="", blank=True)
-    numcpu = models.CharField(max_length=10, default="")
-    nummem = models.CharField(max_length=10, default="")
-    osversion = models.CharField(max_length=30, null=True, default="", blank=True)
+    num_cpu = models.CharField(max_length=10, default="")
+    num_mem = models.CharField(max_length=10, default="")
+    os_version = models.CharField(max_length=30, null=True, default="", blank=True)
     SERVER_TYPE = [('physical', 'physical'), ('virtual', 'virtual')]
     server_type = models.CharField(max_length=10, choices=SERVER_TYPE, default="physical")
-    # created = models.DateTimeField(auto_now_add=True)
-    # updated = models.DateTimeField(auto_now_add=True)
-    #
-    # class Meta:
-    #     ordering = ('created',)
+
+    def to_dict(self):
+        host_dict = {
+            "host_name": self.host_name,
+            "ip_address": self.ip_address,
+            "serial": self.serial,
+            "rack_id": self.rack_id,
+            "num_cpu": self.num_cpu,
+            "num_mem": self.num_mem,
+            "os_version": self.os_version,
+            "server_type": self.server_type
+        }
+        return host_dict
 
 
 class ClusterBasicInfo(models.Model):
@@ -32,5 +40,5 @@ class ClusterBasicInfo(models.Model):
 
 
 class ClusterHostMapping(models.Model):
-    clusterinfo = models.ForeignKey(ClusterBasicInfo, related_name="mapping_basic", on_delete=models.CASCADE)
-    hostinfo = models.ForeignKey(HostBasicInfo, related_name="host_cluster", on_delete=models.CASCADE)
+    cluster_info = models.ForeignKey(ClusterBasicInfo, related_name="mapping_basic", on_delete=models.CASCADE)
+    host_info = models.ForeignKey(HostBasicInfo, related_name="host_cluster", on_delete=models.CASCADE)

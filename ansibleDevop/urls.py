@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from django.urls import include, path
 
 from cmdb.views import *
 from django.conf.urls import url
@@ -36,7 +37,8 @@ urlpatterns = [
     # """
     # the following two lines is use for restful interface
     # """
-    url(r'^api/$', HostBasicInfoList.as_view()),
-    url(r'^api/(?P<pk>[0-9]+)/$', HostBasicInfoDetail.as_view()),
-    url(r'^api/fetch/$', HostBasicInfoFetchOne.as_view())
+    #url(r'^api/$', HostBasicInfoList.as_view()),
+    #url(r'^api/(?P<pk>[0-9]+)/$', HostBasicInfoDetail.as_view()),
+    #url(r'^api/fetch/$', HostBasicInfoFetchOne.as_view()),
+    path('cmdb/', include('cmdb.urls'))
 ]
