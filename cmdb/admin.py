@@ -10,14 +10,14 @@ from .models import HostBasicInfo, ClusterBasicInfo, ClusterHostMapping
 
 class HostBasicInfoAdmin(admin.ModelAdmin):
     list_display = [
-        "hostname",
-        "ipaddress",
+        "host_name",
+        "ip_address",
         "serial",
         "rack_id",
-        "numcpu",
-        "nummem",
+        "num_cpu",
+        "num_mem",
         "server_type",
-        "osversion"
+        "os_version"
     ]
 
 
