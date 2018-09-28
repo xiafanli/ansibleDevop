@@ -33,13 +33,6 @@ class ClusterBasicInfoModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClusterBasicInfo
         fields = (
-<<<<<<< HEAD
-            'cluster_id',
-            'cluster_name',
-            'cluster_type',
-            'cluster_version'
-        )
-=======
             ClusterFields.F_CLUSTER_ID,
             ClusterFields.F_CLUSTER_NAME,
             ClusterFields.F_CLUSTER_TYPE,
@@ -65,6 +58,4 @@ class ClusterHostInfoSerializer(serializers.ModelSerializer):
         host_list = []
         for cluster_host in cls_host_queryset:
             host_list.append(cluster_host.host_info.to_dict())
-
         return host_list
->>>>>>> restdev

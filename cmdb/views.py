@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-<<<<<<< HEAD
-from rest_framework import generics
-from .serializers import HostBasicInfoModelSerializer
-from cmdb.models import *
-=======
+
+
+
 from rest_framework import generics, status
 from rest_framework.response import Response
 
@@ -14,18 +12,14 @@ from cmdb.common.field import HostInfoFields
 from .models import HostBasicInfo, ClusterHostMapping
 from .serializers import HostBasicInfoModelSerializer, ClusterHostInfoSerializer, ClusterBasicInfoModelSerializer
 from cmdb.models import ClusterBasicInfo
->>>>>>> restdev
+
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.conf import settings
 import json
 
-<<<<<<< HEAD
-# view interface
-=======
 
-#vire interface
->>>>>>> restdev
+# view interface
 def ClusterInfoView(request):
     if request.method == "POST":
         cluster_id = request.POST['cluster_id']
@@ -49,8 +43,6 @@ def HostInfoView(request):
     AllhostObject = HostBasicInfo.objects.all().order_by("ipaddress")
     return render(request, 'host.html', {"AllhostObject": AllhostObject})
 
-<<<<<<< HEAD
-
 def get_cluster_info_by_ip(request):
     cluster = []
     ip = request.POST['ip']
@@ -63,9 +55,8 @@ def get_cluster_info_by_ip(request):
 
 # rest interface
 class HostBasicInfoList(generics.ListCreateAPIView):
-=======
+
 class HostBasicInfoDetail(generics.RetrieveUpdateDestroyAPIView):
->>>>>>> restdev
     queryset = HostBasicInfo.objects.all()
     serializer_class = HostBasicInfoModelSerializer
 
