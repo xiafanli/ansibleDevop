@@ -2,5 +2,5 @@
 
 
 class ResponseTool:
-    def get_response_data(str_data):
-        return {'describe': str_data}
+    def get_response_data(data):
+        return {'describe': data}

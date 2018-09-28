@@ -98,13 +98,25 @@ class ClusterDetailsInfo(generics.RetrieveAPIView):
 
 class ClusterIpMappingOp(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
-        host_ip = request.data[ClusterHostMapRequestParam.PARAM_HOST_IP]
-        cluster_name = request.data[ClusterHostMapRequestParam.PARAM_CLUSTER_NAME]
+        msg_error = []
+        request_data = request.data
+        for one_record in request_data:
+            (msg, is_success) = self.create_cluster_host_map(one_record)
+            if not is_success:
+                msg_error.append(msg)
 
+        if len(msg_error) > 0:
+            return Response(ResponseTool.get_response_data(msg_error), status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(ResponseTool.get_response_data("Create cluster and host mapping sucessfully"),
+                            status=status.HTTP_201_CREATED)
+
+    def create_cluster_host_map(self, one_record):
+        host_ip = one_record[ClusterHostMapRequestParam.PARAM_HOST_IP]
+        cluster_name = one_record[ClusterHostMapRequestParam.PARAM_CLUSTER_NAME]
         cluster_queryset = ClusterBasicInfo.objects.filter(cluster_name=cluster_name)
         if cluster_queryset.count() == 0:
-            return Response(ResponseTool.get_response_data("Cluster %s does not exist." % cluster_name),
-                            status=status.HTTP_400_BAD_REQUEST)
+            return "Cluster %s does not exist." % cluster_name, False
 
         host_info_queryset = HostBasicInfo.objects.filter(ip_address=host_ip)
         if host_info_queryset.count() == 0:
@@ -115,15 +127,11 @@ class ClusterIpMappingOp(generics.CreateAPIView):
         mapping_queryset = ClusterHostMapping.objects.filter(cluster_info=cluster_queryset[0],
                                                              host_info=host_info_queryset[0])
         if mapping_queryset.count() > 0:
-            return Response("The mapping of cluster and host has exist.", status=status.HTTP_400_BAD_REQUEST)
+            return "The mapping of cluster %s and host %s has exist." % (cluster_name, host_ip), False
 
         cls_ip_mapping = ClusterHostMapping(cluster_info=cluster_queryset[0], host_info=host_info_queryset[0])
         cls_ip_mapping.save()
-
-        return Response(ResponseTool.get_response_data("Create cluster and host mapping sucessfully."),
-                        status=status.HTTP_201_CREATED)
-
-
+        return "Create cluster and host mapping sucessfully.", True
 
 
 
