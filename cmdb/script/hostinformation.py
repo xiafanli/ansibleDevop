@@ -1,4 +1,4 @@
-import  requests
+import requests
 import subprocess
 import json
 import re
@@ -78,7 +78,7 @@ class HostInfoCollect(object):
         try:
             result = requests.get(get_request_url)
             if result.status_code == 200:
-                json_result = json.loads(result.content)
+                json_result = result.json()
                 if len(json_result) == 0:
                     post_result = requests.post(post_request_url, data=json.dumps(data), headers=self.HEADERS)
                     print(post_result.status_code)

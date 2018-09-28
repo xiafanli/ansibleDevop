@@ -85,6 +85,36 @@ class ClusterInfo(generics.ListCreateAPIView):
     queryset = ClusterBasicInfo.objects.all()
     serializer_class = ClusterBasicInfoModelSerializer
 
+    def create(self, request, *args, **kwargs):
+        cluster_id = request.data[ClusterFields.F_CLUSTER_ID]
+        if self.exist_cluster_id(cluster_id):
+            return Response(ResponseTool.get_response_data('Cluster id %s has exist.' % cluster_id))
+
+
+        cluster_name = request.data[ClusterFields.F_CLUSTER_NAME]
+        if self.exist_cluster_name(cluster_name):
+            return Response(ResponseTool.get_response_data('Cluster name %s has exist.' % cluster_name))
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def exist_cluster_name(self, cluster_name):
+        cluster_info_queryset = ClusterBasicInfo.objects.filter(cluster_name=cluster_name)
+        if cluster_info_queryset.count() > 0:
+            return True
+        else:
+            return False
+
+    def exist_cluster_id(self, cluster_id):
+        cluster_info_queryset = ClusterBasicInfo.objects.filter(cluster_id=cluster_id)
+        if cluster_info_queryset.count() > 0:
+            return True
+        else:
+            return False
+
 
 class ClusterInfoRUD(generics.RetrieveUpdateDestroyAPIView):
     queryset = ClusterBasicInfo.objects.all()
@@ -112,11 +142,24 @@ class ClusterIpMappingOp(generics.CreateAPIView):
                             status=status.HTTP_201_CREATED)
 
     def create_cluster_host_map(self, one_record):
-        host_ip = one_record[ClusterHostMapRequestParam.PARAM_HOST_IP]
-        cluster_name = one_record[ClusterHostMapRequestParam.PARAM_CLUSTER_NAME]
-        cluster_queryset = ClusterBasicInfo.objects.filter(cluster_name=cluster_name)
-        if cluster_queryset.count() == 0:
-            return "Cluster %s does not exist." % cluster_name, False
+        host_ip = one_record.get(ClusterHostMapRequestParam.PARAM_HOST_IP)
+        if host_ip is None:
+            return "Missing parameter host_ip.", False
+
+        cluster_name = one_record.get(ClusterHostMapRequestParam.PARAM_CLUSTER_NAME)
+        cluster_id = one_record.get(ClusterHostMapRequestParam.PARAM_CLUSTER_ID)
+        if cluster_name is None and cluster_id is None:
+            return "must provide one parameter between cluster_name and cluster_id.", False
+
+        if cluster_name is not None:
+            cluster_queryset = ClusterBasicInfo.objects.filter(cluster_name=cluster_name)
+            if cluster_queryset.count() == 0:
+                return "Cluster %s does not exist." % cluster_name, False
+
+        if cluster_id is not None:
+            cluster_queryset = ClusterBasicInfo.objects.filter(cluster_id=cluster_id)
+            if cluster_queryset.count() == 0:
+                return "Cluster id %s does not exist." % cluster_id, False
 
         host_info_queryset = HostBasicInfo.objects.filter(ip_address=host_ip)
         if host_info_queryset.count() == 0:
@@ -127,7 +170,8 @@ class ClusterIpMappingOp(generics.CreateAPIView):
         mapping_queryset = ClusterHostMapping.objects.filter(cluster_info=cluster_queryset[0],
                                                              host_info=host_info_queryset[0])
         if mapping_queryset.count() > 0:
-            return "The mapping of cluster %s and host %s has exist." % (cluster_name, host_ip), False
+            return "The mapping of cluster %s and host %s has exist." % (cluster_name if cluster_id is None else cluster_id,
+                                                                         host_ip), False
 
         cls_ip_mapping = ClusterHostMapping(cluster_info=cluster_queryset[0], host_info=host_info_queryset[0])
         cls_ip_mapping.save()
