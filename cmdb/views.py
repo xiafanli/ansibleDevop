@@ -1,25 +1,23 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-
-
 from rest_framework import generics, status
 from rest_framework.response import Response
 
 from cmdb.common.requestsparam import ClusterHostMapRequestParam
 from cmdb.common.responsetool import ResponseTool
 from cmdb.common.field import HostInfoFields, ClusterFields
-from .models import HostBasicInfo, ClusterHostMapping
+from .models import HostBasicInfo, ClusterHostMapping, ClusterBasicInfo
 from .serializers import HostBasicInfoModelSerializer, ClusterHostInfoSerializer, ClusterBasicInfoModelSerializer
-from cmdb.models import ClusterBasicInfo
-
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.conf import settings
+from cmdb.common import options
 import json
+from django.contrib.auth.decorators import login_required
 
 
 # view interface
+@login_required(login_url="/login")
 def ClusterInfoView(request):
     if request.method == "POST":
         cluster_id = request.POST['cluster_id']
@@ -36,13 +34,30 @@ def ClusterInfoView(request):
         AllclusterObject = ClusterBasicInfo.objects.all().order_by(ClusterFields.F_CLUSTER_ID)
     else:
         AllclusterObject = ClusterBasicInfo.objects.all().order_by(ClusterFields.F_CLUSTER_ID)
-    return render(request, "manager.html", {"AllclusterObject": AllclusterObject, "cluster_type": settings.CLUSTER_TYPE})
+    return render(request, "manager.html", {"AllclusterObject": AllclusterObject,
+                                            "cluster_type": options.CLUSTER_TYPE})
 
+@login_required(login_url="/login")
+def aggregate_cluster(request):
+    cluster_count = {}
+    result = []
+    host = ClusterHostMapping.objects.all()
+    for i in host:
+        if i.cluster_info.cluster_name in cluster_count:
+            cluster_count[i.cluster_info.cluster_name] += 1
+        else:
+            cluster_count[i.cluster_info.cluster_name] = 1
+    for k, v in cluster_count.items():
+        result.append({'name': k, 'value': v})
+    return JsonResponse(json.dumps({"result": result}), safe=False)
 
+@login_required(login_url="/login")
 def HostInfoView(request):
     AllhostObject = HostBasicInfo.objects.all().order_by(HostInfoFields.F_HOST_IP)
     return render(request, 'host.html', {"AllhostObject": AllhostObject})
 
+
+@login_required(login_url="/login")
 def get_cluster_info_by_ip(request):
     cluster = []
     ip = request.POST['ip']

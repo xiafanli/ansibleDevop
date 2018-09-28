@@ -26,7 +26,7 @@
         <ul class="nav sidebar-nav">
             <li class="sidebar-brand">
                 <a href="#">
-                    {{request.user}}
+                    {{ request.user }}
                 </a>
             </li>
             <li class="sidebar-brand">
@@ -43,15 +43,15 @@
             <li>
                 <a href="/cluster"><i class="fa fa-fw fa-file-o"></i> Cluster Center</a>
             </li>
-{#            <li>#}
-{#                <a href="/job"><i class="fa fa-fw fa-cog"></i> Job Center</a>#}
-{#            </li>#}
-{#            <li>#}
-{#                <a href="/history"><i class="fa fa-fw fa-cog"></i> History</a>#}
-{#            </li>#}
-{#            <li>#}
-{#                <a href="/report"><i class="fa fa-fw fa-cog"></i> Report</a>#}
-{#            </li>#}
+            {#            <li>#}
+            {#                <a href="/job"><i class="fa fa-fw fa-cog"></i> Job Center</a>#}
+            {#            </li>#}
+            {#            <li>#}
+            {#                <a href="/history"><i class="fa fa-fw fa-cog"></i> History</a>#}
+            {#            </li>#}
+            {#            <li>#}
+            {#                <a href="/report"><i class="fa fa-fw fa-cog"></i> Report</a>#}
+            {#            </li>#}
         </ul>
     </nav>
     <!-- /#sidebar-wrapper -->
@@ -66,11 +66,11 @@
         <a class="col-md-offset-10" href="{% url 'logout' %}">注销登录</a>
         <div class="container">
             <div class="row">
-                <h1>Welcome ansible Devops</h1>
+                <h1>大数据主机明细仪表盘</h1>
             </div>
             <div class="row">
                 <div class="col-lg-12">
-                    <div id="sexId" style="width: auto;height: 400px"></div>
+                    <div id="sexId" style="width: auto;height: 600px"></div>
                 </div>
             </div>
         </div>
@@ -80,15 +80,31 @@
 </div>
 <!-- /#wrapper -->
 
-<script src="{% static 'js/jquery-1.11.3.min.js'%}"></script>
+<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'js/echarts.min.js' %}></script>
-<script src="{% static 'js/echarts-util.js' %}></script>
+<script src="{% static 'js/echarts.min.js' %}"></script>
+<script src="{% static 'js/echarts-util.js' %}"></script>
+{% csrf_token %}
 <script type="text/javascript">
+    // add django csrf
+    var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val()
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
     $(document).ready(function () {
         var trigger = $('.hamburger'),
-                overlay = $('.overlay'),
-                isClosed = false;
+            overlay = $('.overlay'),
+            isClosed = false;
 
         trigger.click(function () {
             hamburger_cross();
@@ -112,6 +128,45 @@
         $('[data-toggle="offcanvas"]').click(function () {
             $('#wrapper').toggleClass('toggled');
         });
+
+        var jdata = [];
+        $.ajax({
+            type: 'POST',
+            url: '/aggregatecluster',
+            async: false,
+            success: function (data) {
+                jdata = $.parseJSON(data)
+            }
+        })
+        {#var data = [#}
+        {#    {name: '男生', value: 10},#}
+        {#    {name: '女生', value: 20}#}
+        {#];#}
+        var option = MyEcharts.EchartsOption.pie("服务器明细图", "单位（台）", jdata.result);
+        var initChart = MyEcharts.initChart(option, "sexId");//sexId是div的id
+        var options = {
+            grid: {
+                left: '15%',
+                top: '15%',
+                right: '15%',
+                bottom: '15%',
+            },
+            legend: {
+                orient: 'vertical', //垂直：vertical； 水平 horizontal
+                right: 'right',
+                textStyle: {
+                    fontSize: 15
+                }
+            },
+            textStyle: {
+                fontSize: 15
+            },
+            series: [{
+                radius: '80%', //圆的大小
+                center: ['50%', '50%'],//位置居中
+            }]
+        };
+        initChart.setOption(options);
     });
 </script>
 </body>

@@ -138,5 +138,3 @@ STATICFILES_DIRS = [
 
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
-
-CLUSTER_TYPE = ["hadoop", "elasticsearch", "kafka", "zk", "fi"]

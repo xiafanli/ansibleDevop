@@ -5,6 +5,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class HostBasicInfo(models.Model):
     host_name = models.CharField(max_length=30,  null=True, default="", blank=True)
     ip_address = models.CharField(max_length=16)
