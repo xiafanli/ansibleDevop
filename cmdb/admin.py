@@ -16,7 +16,7 @@ class HostBasicInfoAdmin(admin.ModelAdmin):
         "rack_id",
         "num_cpu",
         "num_mem",
-        "server_type",
+        "machine_type",
         "os_version"
     ]
 

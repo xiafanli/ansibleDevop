@@ -14,7 +14,7 @@ class HostBasicInfo(models.Model):
     num_mem = models.CharField(max_length=10, default="")
     os_version = models.CharField(max_length=30, null=True, default="", blank=True)
     SERVER_TYPE = [('physical', 'physical'), ('virtual', 'virtual')]
-    server_type = models.CharField(max_length=10, choices=SERVER_TYPE, default="physical")
+    machine_type = models.CharField(max_length=10, choices=SERVER_TYPE, default="physical")
 
     def to_dict(self):
         host_dict = {
@@ -25,7 +25,7 @@ class HostBasicInfo(models.Model):
             "num_cpu": self.num_cpu,
             "num_mem": self.num_mem,
             "os_version": self.os_version,
-            "server_type": self.server_type
+            "machine_type": self.machine_type
         }
         return host_dict
 

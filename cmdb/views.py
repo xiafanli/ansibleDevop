@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from cmdb.common.requestsparam import ClusterHostMapRequestParam
 from cmdb.common.responsetool import ResponseTool
-from cmdb.common.field import HostInfoFields
+from cmdb.common.field import HostInfoFields, ClusterFields
 from .models import HostBasicInfo, ClusterHostMapping
 from .serializers import HostBasicInfoModelSerializer, ClusterHostInfoSerializer, ClusterBasicInfoModelSerializer
 from cmdb.models import ClusterBasicInfo
@@ -33,34 +33,27 @@ def ClusterInfoView(request):
             cluster_version=cluster_version
         )
         clusterObject.save()
-        AllclusterObject = ClusterBasicInfo.objects.all().order_by("cluster_id")
+        AllclusterObject = ClusterBasicInfo.objects.all().order_by(ClusterFields.F_CLUSTER_ID)
     else:
-        AllclusterObject = ClusterBasicInfo.objects.all().order_by("cluster_id")
+        AllclusterObject = ClusterBasicInfo.objects.all().order_by(ClusterFields.F_CLUSTER_ID)
     return render(request, "manager.html", {"AllclusterObject": AllclusterObject, "cluster_type": settings.CLUSTER_TYPE})
 
 
 def HostInfoView(request):
-    AllhostObject = HostBasicInfo.objects.all().order_by("ipaddress")
+    AllhostObject = HostBasicInfo.objects.all().order_by(HostInfoFields.F_HOST_IP)
     return render(request, 'host.html', {"AllhostObject": AllhostObject})
 
 def get_cluster_info_by_ip(request):
     cluster = []
     ip = request.POST['ip']
-    host_object = HostBasicInfo.objects.filter(ipaddress=ip)
+    host_object = HostBasicInfo.objects.filter(ip_address=ip)
     for host in host_object:
         for info in host.host_cluster.all():
-            cluster.append(info.clusterinfo.cluster_name)
+            cluster.append(info.cluster_info.cluster_name)
     return JsonResponse(json.dumps({'cluster': "\t".join(cluster)}), safe=False)
 
 
 # rest interface
-class HostBasicInfoList(generics.ListCreateAPIView):
-
-class HostBasicInfoDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = HostBasicInfo.objects.all()
-    serializer_class = HostBasicInfoModelSerializer
-
-
 class HostInfo(generics.ListCreateAPIView,
                generics.RetrieveUpdateDestroyAPIView):
     queryset = HostBasicInfo.objects.all()
