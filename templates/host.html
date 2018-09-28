@@ -131,14 +131,14 @@
                     <tbody>
                     {% for object in AllhostObject %}
                         <tr>
-                            <td>{{ object.hostname }}</td>
-                            <td data-field="name">{{ object.ipaddress }}</td>
+                            <td>{{ object.host_name }}</td>
+                            <td data-field="name">{{ object.ip_address }}</td>
                             <td>{{ object.serial }}</td>
                             <td>{{ object.rack_id }}</td>
-                            <td>{{ object.numcpu }}</td>
-                            <td>{{ object.nummem }}</td>
-                            <td>{{ object.osversion }}</td>
-                            <td>{{ object.server_type }}</td>
+                            <td>{{ object.num_cpu }}</td>
+                            <td>{{ object.num_mem }}</td>
+                            <td>{{ object.os_version }}</td>
+                            <td>{{ object.machine_type }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>
