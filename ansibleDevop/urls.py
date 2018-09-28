@@ -33,7 +33,8 @@ urlpatterns = [
     url(r'^logout$', LogoutView.as_view(), name='logout'),
     url(r'^cluster$', ClusterInfoView, name='cluster'),
     url(r'^host', HostInfoView, name='cluster'),
-    url(r'getclusterinfo', get_cluster_info_by_ip, name='getclusterinfo'),
+    url(r'^getclusterinfo$', get_cluster_info_by_ip, name='getclusterinfo'),
+    url(r'^aggregatecluster$', aggregate_cluster, name='aggregatecluster'),
     # """
     # the following two lines is use for restful interface
     # """

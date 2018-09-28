@@ -87,10 +87,10 @@
                     <div class="form-row">
                         <div class="form-group col-md-6">
                             <label>Cluster Type</label>
-{#                            <input type="text" class="form-control" name="cluster_type" placeholder="Cluster Type">#}
-                            <select id="inputState" class="form-control">
+                            {#                            <input type="text" class="form-control" name="cluster_type" placeholder="Cluster Type">#}
+                            <select id="inputState" class="form-control" name="cluster_type">
                                 {% for type in cluster_type %}
-                                <option>{{ type }}</option>
+                                    <option>{{ type }}</option>
                                 {% endfor %}
                             </select>
                             <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>
@@ -103,7 +103,7 @@
                         </div>
                     </div>
                     <div class="form-group col-md-6">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" onclick="return checkNull()">Submit</button>
                     </div>
 
                 </form>
@@ -142,6 +142,25 @@
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'bootstraptable/bootstrap-table.min.js' %}"></script>
 <script type="text/javascript">
+    function checkNull() {
+        var num = 0;
+        var str = "";
+        $("input[type$='text']").each(function (n) {
+            if ($(this).val() == "") {
+                num++;
+                str += "?" + $(this).attr("msg") + "不能为空！\r\n";
+            }
+        });
+        if (num > 0) {
+            alert(str);
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+</script>
+<script type="text/javascript">
     $(document).ready(function () {
         var trigger = $('.hamburger'),
             overlay = $('.overlay'),
@@ -169,7 +188,6 @@
         $('[data-toggle="offcanvas"]').click(function () {
             $('#wrapper').toggleClass('toggled');
         });
-
     });
 </script>
 </body>
