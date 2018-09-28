@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from rest_framework import generics
-from .models import HostBasicInfo
 from .serializers import HostBasicInfoModelSerializer
-from django.http import HttpResponse
-from cmdb.models import ClusterBasicInfo
+from cmdb.models import *
 from django.shortcuts import render
+from django.http import JsonResponse
 from django.conf import settings
-
+import json
 
 # view interface
 def ClusterInfoView(request):
@@ -32,6 +31,16 @@ def ClusterInfoView(request):
 def HostInfoView(request):
     AllhostObject = HostBasicInfo.objects.all().order_by("ipaddress")
     return render(request, 'host.html', {"AllhostObject": AllhostObject})
+
+
+def get_cluster_info_by_ip(request):
+    cluster = []
+    ip = request.POST['ip']
+    host_object = HostBasicInfo.objects.filter(ipaddress=ip)
+    for host in host_object:
+        for info in host.host_cluster.all():
+            cluster.append(info.clusterinfo.cluster_name)
+    return JsonResponse(json.dumps({'cluster': "\t".join(cluster)}), safe=False)
 
 
 # rest interface

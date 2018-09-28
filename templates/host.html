@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Graph Devops</title>
+    <title>PAB BigData CMDB</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'bootstraptable/bootstrap-table.min.css' %}">
@@ -155,11 +155,40 @@
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'bootstraptable/bootstrap-table.min.js' %}"></script>
 <script src="{% static 'bootstraptable/extensions/toolbar/bootstrap-table-toolbar.min.js' %}"></script>
-<script>
+<!-- add django csrf -->
+{% csrf_token %}
+<script type="text/javascript">
+    // add django csrf
+    var csrftoken = jQuery("[name=csrfmiddlewaretoken]").val()
+
+    function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    }
+
+    $.ajaxSetup({
+        beforeSend: function (xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+            }
+        }
+    });
+
     function detailFormatter(index, row) {
         var html = [];
-        console.log(row.name);
-        html.push('<b style="text-align: left">'  + row.name + ' </b>');
+        var jdata = ""
+        $.ajax({
+            type: 'POST',
+            url: "/getclusterinfo/",
+            data: {
+                "ip": row.name
+            },
+            async: false,
+            success: function (data) {
+                jdata = $.parseJSON(data);
+            },
+        });
+        html.push('<b>' + jdata.cluster + ' </b>')
         return html.join('');
     }
 </script>
@@ -168,7 +197,6 @@
         var trigger = $('.hamburger'),
             overlay = $('.overlay'),
             isClosed = false;
-
         trigger.click(function () {
             hamburger_cross();
         });
