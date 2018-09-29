@@ -37,6 +37,7 @@ def ClusterInfoView(request):
     return render(request, "manager.html", {"AllclusterObject": AllclusterObject,
                                             "cluster_type": options.CLUSTER_TYPE})
 
+
 @login_required(login_url="/login")
 def aggregate_cluster(request):
     cluster_count = {}
@@ -50,6 +51,7 @@ def aggregate_cluster(request):
     for k, v in cluster_count.items():
         result.append({'name': k, 'value': v})
     return JsonResponse(json.dumps({"result": result}), safe=False)
+
 
 @login_required(login_url="/login")
 def HostInfoView(request):
@@ -191,7 +193,3 @@ class ClusterIpMappingOp(generics.CreateAPIView):
         cls_ip_mapping = ClusterHostMapping(cluster_info=cluster_queryset[0], host_info=host_info_queryset[0])
         cls_ip_mapping.save()
         return "Create cluster and host mapping sucessfully.", True
-
-
-
-

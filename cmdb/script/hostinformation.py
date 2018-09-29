@@ -49,12 +49,17 @@ class HostInfoCollect(object):
             machine_type = self.STR_PHYSICAL
         return machine_type
 
+    def get_os_version(self):
+        os_version_result = self.exec_cmd("cat /etc/redhat-release")
+        return os_version_result
+
     def create_push_data(self):
         host_name = self.get_hostname()
         cpu_num = self.get_cpu()
         mem_num = self.get_memory()
         serial_no = self.get_serial_no()
         ip_address = self.get_ip_address()
+        os_version = self.get_os_version()
         machine_type = self.get_machine_type(serial_no)
 
         data = {
@@ -64,6 +69,7 @@ class HostInfoCollect(object):
             HostInfoFields.F_NUM_MEM: mem_num,
             HostInfoFields.F_SERIAL_NO: serial_no,
             HostInfoFields.F_MACHINE_TYPE: machine_type,
+            HostInfoFields.F_OS_VERSION: os_version
         }
 
         return data
