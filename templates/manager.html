@@ -148,7 +148,7 @@
         $("input[type$='text']").each(function (n) {
             if ($(this).val() == "") {
                 num++;
-                str += "?" + $(this).attr("msg") + "不能为空！\r\n";
+                str += $(this).attr("name") + "不能为空！\r\n";
             }
         });
         if (num > 0) {

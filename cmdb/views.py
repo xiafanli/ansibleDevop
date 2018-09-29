@@ -24,7 +24,7 @@ def ClusterInfoView(request):
         cluster_name = request.POST['cluster_name']
         cluster_type = request.POST['cluster_type']
         cluster_version = request.POST['cluster_version']
-        clusterObject = ClusterBasicInfo.objects.create(
+        clusterObject = ClusterBasicInfo.objects.update_or_create(
             cluster_id=cluster_id,
             cluster_name=cluster_name,
             cluster_type=cluster_type,

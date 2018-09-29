@@ -25,3 +25,14 @@ class ClusterFields:
 class ClusterHostMapFields:
     F_CLUSTER_INFO = 'cluster_info'
     F_HOST_INFO = 'host_info'
+
+
+class ComponentInfoFields:
+    F_COMPONENT_TYPE = "component_type"
+    F_COMPONENT_VERSION = "component_version"
+    F_HOST_INFO_LIST = "host_info_list"
+
+
+class ComponentHostMapFields:
+    F_COMPONENT_INFO = "component_info"
+    F_HOST_INFO = "host_info"
