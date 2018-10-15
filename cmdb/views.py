@@ -71,8 +71,7 @@ def get_cluster_info_by_ip(request):
 
 
 # rest interface
-class HostInfo(generics.ListCreateAPIView,
-               generics.RetrieveUpdateDestroyAPIView):
+class HostInfo(generics.ListCreateAPIView,generics.RetrieveUpdateDestroyAPIView):
     queryset = HostBasicInfo.objects.all()
     serializer_class = HostBasicInfoModelSerializer
 
@@ -141,6 +140,11 @@ class ClusterInfoRUD(generics.RetrieveUpdateDestroyAPIView):
 class ClusterDetailsInfo(generics.RetrieveAPIView):
     queryset = ClusterBasicInfo.objects.all()
     serializer_class = ClusterHostInfoSerializer
+
+
+class ComponentIpMappingOp(generics.CreateAPIView):
+    def create(self, request, *args, **kwargs):
+        pass
 
 
 class ClusterIpMappingOp(generics.CreateAPIView):
