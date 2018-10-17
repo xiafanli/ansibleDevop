@@ -126,9 +126,9 @@ class ComponentInfoCollect(InfoCollect):
 def main():
     host_collect = HostInfoCollect()
     host_collect.push_host_info()
-    copmonent_collect = ComponentInfoCollect()
-    copmonent_collect.get_copmponent_match_result()
-    print(copmonent_collect.component)
+    component_collect = ComponentInfoCollect()
+    component_collect.get_copmponent_match_result()
+    print(component_collect.component)
 
 
 if __name__ == "__main__":
