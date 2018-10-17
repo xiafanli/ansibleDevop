@@ -1,4 +1,4 @@
-componet_mapping = {
+component_mapping = {
     "org.apache.zookeeper.server.quorum.QuorumPeerMain": "Zookeeper",
     "org.apache.hadoop.hdfs.qjournal.server.JournalNode": "JournalNode",
     "org.apache.hadoop.hdfs.tools.DFSZKFailoverController": "DFSZKFailoverController",

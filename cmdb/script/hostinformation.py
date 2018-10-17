@@ -2,12 +2,23 @@ import requests
 import subprocess
 import json
 import re
-from decimal import *
+
 
 from cmdb.common.field import HostInfoFields
+from cmdb.common.componetRegexMapping import component_mapping
 
 
-class HostInfoCollect(object):
+class InfoCollect(object):
+
+    def exec_cmd(self, cmd):
+        output = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        return output.communicate()[0]
+
+    def push_host_info(self):
+        pass
+
+
+class HostInfoCollect(InfoCollect):
     STR_PHYSICAL = 'physical'
     STR_VM = 'virtual'
     STR_VM_FLAG = 'VMware'
@@ -16,10 +27,6 @@ class HostInfoCollect(object):
 
     def __init__(self):
         self.ip_exp = re.compile(u'10(\.(2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})){3}')
-
-    def exec_cmd(self, cmd):
-        output = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return output.communicate()[0]
 
     def get_hostname(self):
         hostname = self.exec_cmd('hostname').strip()
@@ -99,9 +106,29 @@ class HostInfoCollect(object):
             print(ex.__str__())
 
 
+class ComponentInfoCollect(InfoCollect):
+
+    def __init__(self):
+        self.component = []
+
+    def get_copmponent_match_result(self):
+        processes = self.exec_cmd("ps -ef |grep java")
+        for process in processes.split("\n"):
+            for k,v in component_mapping.items():
+                match = re.findall(k, process)
+                if len(match) > 0:
+                    self.component.append(match[0])
+
+    def push_host_info(self):
+        pass
+
+
 def main():
     host_collect = HostInfoCollect()
     host_collect.push_host_info()
+    copmonent_collect = ComponentInfoCollect()
+    copmonent_collect.get_copmponent_match_result()
+    print(copmonent_collect.component)
 
 
 if __name__ == "__main__":
