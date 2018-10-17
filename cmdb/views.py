@@ -71,7 +71,7 @@ def get_cluster_info_by_ip(request):
 
 
 # rest interface
-class HostInfo(generics.ListCreateAPIView,generics.RetrieveUpdateDestroyAPIView):
+class HostInfo(generics.ListCreateAPIView, generics.RetrieveUpdateDestroyAPIView):
     queryset = HostBasicInfo.objects.all()
     serializer_class = HostBasicInfoModelSerializer
 
@@ -105,7 +105,6 @@ class ClusterInfo(generics.ListCreateAPIView):
         cluster_id = request.data[ClusterFields.F_CLUSTER_ID]
         if self.exist_cluster_id(cluster_id):
             return Response(ResponseTool.get_response_data('Cluster id %s has exist.' % cluster_id))
-
 
         cluster_name = request.data[ClusterFields.F_CLUSTER_NAME]
         if self.exist_cluster_name(cluster_name):

@@ -1,11 +1,13 @@
 from rest_framework import serializers
 
-from cmdb.common.field import HostInfoFields, ClusterFields
+from cmdb.common.field import HostInfoFields, ClusterFields, ComponentInfoFields
 from .models import HostBasicInfo, ClusterBasicInfo
+from .models import ComponentInfo
 
 
 class HostBasicInfoModelSerializer(serializers.ModelSerializer):
     host_cluster = serializers.SerializerMethodField()
+
     class Meta:
         model = HostBasicInfo
         fields = (
@@ -59,3 +61,15 @@ class ClusterHostInfoSerializer(serializers.ModelSerializer):
         for cluster_host in cls_host_queryset:
             host_list.append(cluster_host.host_info.to_dict())
         return host_list
+
+
+class ComponentHostInfoSerializer(serializers.ModelSerializer):
+    component_info_list = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ComponentInfo
+        fields = [
+            ComponentInfoFields.F_COMPONENT_TYPE,
+            ComponentInfoFields.F_COMPONENT_VERSION,
+            ComponentInfoFields.F_HOST_INFO_LIST
+        ]
