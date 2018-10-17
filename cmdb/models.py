@@ -46,7 +46,7 @@ class ClusterHostMapping(models.Model):
 
 class ComponentInfo(models.Model):
     component_type = models.CharField(max_length=30)
-    component_version = models.CharField(max_length=30)
+    component_version = models.CharField(max_length=30, default="0")
     host_info = models.ManyToManyField(HostBasicInfo, through="ComponentHostMapping")
 
 
