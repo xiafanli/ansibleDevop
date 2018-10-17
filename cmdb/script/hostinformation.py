@@ -114,7 +114,7 @@ class ComponentInfoCollect(InfoCollect):
     def get_copmponent_match_result(self):
         processes = self.exec_cmd("ps -ef |grep java")
         for process in processes.split("\n"):
-            for k,v in component_mapping.items():
+            for k, v in component_mapping.items():
                 match = re.findall(k, process)
                 if len(match) > 0:
                     self.component.append(match[0])
