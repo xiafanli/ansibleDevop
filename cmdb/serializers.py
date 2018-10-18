@@ -28,14 +28,14 @@ class HostBasicInfoModelSerializer(serializers.ModelSerializer):
         cls = obj.host_cluster.all()
         cluster_names = []
         for c in cls:
-            cluster_names.append(c.cluster_info.cluster_name)
+            cluster_names.append(c.cluster_info.cluster_name.component_type)
         return cluster_names
 
     def get_host_component(self, obj):
         all_components = obj.host_component.all()
         component_names = []
         for c in all_components:
-            component_names.append(c.component_info.to_dict())
+            component_names.append(c.component_info)
         return component_names
 
 

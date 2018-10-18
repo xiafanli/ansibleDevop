@@ -122,7 +122,6 @@ class ComponentInfoCollect(InfoCollect):
                     result.append(v)
         return result
 
-
     def push_host_info(self):
         post_request_url = self.REST_URL % 'componenthost'
         data = {'host_ip': self.ip,
