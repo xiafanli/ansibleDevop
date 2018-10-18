@@ -8,7 +8,8 @@ from cmdb.common.requestsparam import ClusterHostMapRequestParam,ComponentHostMa
 from cmdb.common.responsetool import ResponseTool
 from util.field import HostInfoFields, ClusterFields
 from .models import HostBasicInfo, ClusterHostMapping, ClusterBasicInfo, ComponentInfo, ComponentHostMapping
-from .serializers import HostBasicInfoModelSerializer, ClusterHostInfoSerializer, ClusterBasicInfoModelSerializer
+from .serializers import HostBasicInfoModelSerializer, ClusterHostInfoSerializer, ClusterBasicInfoModelSerializer,\
+    ClusterBasicInfoModelCreateSerializer
 from django.shortcuts import render
 from django.http import JsonResponse
 from cmdb.common import options
@@ -17,15 +18,20 @@ from django.contrib.auth.decorators import login_required
 
 
 # view interface
+@login_required(login_url='/login')
+def index(request):
+    return render(request, 'index.html')
+
+
 @login_required(login_url="/login")
-def ClusterInfoView(request):
+def cluster_info(request):
     if request.method == "POST":
-        cluster_id = request.POST['cluster_id']
+        # cluster_id = request.POST['cluster_id']
         cluster_name = request.POST['cluster_name']
         cluster_type = request.POST['cluster_type']
         cluster_version = request.POST['cluster_version']
         clusterObject = ClusterBasicInfo.objects.update_or_create(
-            cluster_id=cluster_id,
+            # cluster_id=cluster_id,
             cluster_name=cluster_name,
             cluster_type=cluster_type,
             cluster_version=cluster_version
@@ -54,7 +60,7 @@ def aggregate_cluster(request):
 
 
 @login_required(login_url="/login")
-def HostInfoView(request):
+def host_info(request):
     AllhostObject = HostBasicInfo.objects.all().order_by(HostInfoFields.F_HOST_IP)
     return render(request, 'host.html', {"AllhostObject": AllhostObject})
 
@@ -102,9 +108,10 @@ class ClusterInfo(generics.ListCreateAPIView):
     serializer_class = ClusterBasicInfoModelSerializer
 
     def create(self, request, *args, **kwargs):
-        cluster_id = request.data[ClusterFields.F_CLUSTER_ID]
-        if self.exist_cluster_id(cluster_id):
-            return Response(ResponseTool.get_response_data('Cluster id %s has exist.' % cluster_id))
+        self.serializer_class = ClusterBasicInfoModelCreateSerializer
+        # cluster_id = request.data[ClusterFields.F_CLUSTER_ID]
+        # if self.exist_cluster_id(cluster_id):
+        #     return Response(ResponseTool.get_response_data('Cluster id %s has exist.' % cluster_id))
 
         cluster_name = request.data[ClusterFields.F_CLUSTER_NAME]
         if self.exist_cluster_name(cluster_name):
@@ -123,12 +130,12 @@ class ClusterInfo(generics.ListCreateAPIView):
         else:
             return False
 
-    def exist_cluster_id(self, cluster_id):
-        cluster_info_queryset = ClusterBasicInfo.objects.filter(cluster_id=cluster_id)
-        if cluster_info_queryset.count() > 0:
-            return True
-        else:
-            return False
+    # def exist_cluster_id(self, cluster_id):
+    #     cluster_info_queryset = ClusterBasicInfo.objects.filter(cluster_id=cluster_id)
+    #     if cluster_info_queryset.count() > 0:
+    #         return True
+    #     else:
+    #         return False
 
 
 class ClusterInfoRUD(generics.RetrieveUpdateDestroyAPIView):
@@ -142,6 +149,7 @@ class ClusterDetailsInfo(generics.RetrieveAPIView):
 
 
 class ClusterIpMappingOp(generics.CreateAPIView):
+
     def create(self, request, *args, **kwargs):
         msg_error = []
         request_data = request.data
@@ -185,8 +193,7 @@ class ClusterIpMappingOp(generics.CreateAPIView):
         mapping_queryset = ClusterHostMapping.objects.filter(cluster_info=cluster_queryset[0],
                                                              host_info=host_info_queryset[0])
         if mapping_queryset.count() > 0:
-            return "The mapping of cluster %s and host %s has exist." % (cluster_name if cluster_id is None else cluster_id,
-                                                                         host_ip), False
+            return "The mapping of cluster %s and host %s has exist." % (cluster_name, host_ip), False
 
         cls_ip_mapping = ClusterHostMapping(cluster_info=cluster_queryset[0], host_info=host_info_queryset[0])
         cls_ip_mapping.save()

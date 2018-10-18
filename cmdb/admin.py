@@ -33,7 +33,6 @@ class ClusterInfoAdmin(admin.StackedInline):
 class ClusterBasicInfoAdmin(admin.ModelAdmin):
     inlines = (ClusterInfoAdmin,)
     list_display = [
-        'cluster_id',
         'cluster_name',
         'cluster_type',
         'cluster_version'

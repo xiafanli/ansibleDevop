@@ -50,6 +50,16 @@ class ClusterBasicInfoModelSerializer(serializers.ModelSerializer):
         )
 
 
+class ClusterBasicInfoModelCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ClusterBasicInfo
+        fields = (
+            ClusterFields.F_CLUSTER_NAME,
+            ClusterFields.F_CLUSTER_TYPE,
+            ClusterFields.F_CLUSTER_VERSION,
+        )
+
+
 class ClusterHostInfoSerializer(serializers.ModelSerializer):
     host_info_list = serializers.SerializerMethodField()
 

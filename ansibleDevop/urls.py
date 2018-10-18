@@ -28,11 +28,11 @@ urlpatterns = [
     # """
     # the following three lines in use for the login page
     # """
-    url(r'^$', TemplateView.as_view(template_name='index.html'), name='home'),
+    url(r'^$',index, name='home'),
     url(r'^login$', LoginView.as_view(), name='login'),
     url(r'^logout$', LogoutView.as_view(), name='logout'),
-    url(r'^cluster$', ClusterInfoView, name='cluster'),
-    url(r'^host', HostInfoView, name='cluster'),
+    url(r'^cluster$', cluster_info, name='cluster'),
+    url(r'^host', host_info, name='cluster'),
     url(r'^getclusterinfo$', get_cluster_info_by_ip, name='getclusterinfo'),
     url(r'^aggregatecluster$', aggregate_cluster, name='aggregatecluster'),
     # """

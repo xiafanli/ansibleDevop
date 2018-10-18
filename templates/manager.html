@@ -44,15 +44,6 @@
             <li>
                 <a href="/cluster$"><i class="fa fa-fw fa-file-o"></i> Cluster Center</a>
             </li>
-            {#            <li>#}
-            {#                <a href="/job"><i class="fa fa-fw fa-cog"></i> Job Center</a>#}
-            {#            </li>#}
-            {#            <li>#}
-            {#                <a href="/history"><i class="fa fa-fw fa-cog"></i> History</a>#}
-            {#            </li>#}
-            {#            <li>#}
-            {#                <a href="/report"><i class="fa fa-fw fa-cog"></i> Report</a>#}
-            {#            </li>#}
         </ul>
     </nav>
     <!-- /#sidebar-wrapper -->
@@ -73,19 +64,13 @@
                 <form action="cluster" method="post">
                     {% csrf_token %}
                     <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Cluster ID</label>
-                            <input type="text" class="form-control" name="cluster_id" placeholder="Cluster ID">
-                            <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>
-                        </div>
-                        <div class="form-group col-md-6">
+
+                        <div class="form-group col-md-4">
                             <label>Cluster Name</label>
                             <input type="text" class="form-control" name="cluster_name" placeholder="Cluster Name">
                             <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>
                         </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label>Cluster Type</label>
                             {#                            <input type="text" class="form-control" name="cluster_type" placeholder="Cluster Type">#}
                             <select id="inputState" class="form-control" name="cluster_type">
@@ -95,14 +80,14 @@
                             </select>
                             <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label>Cluster Version</label>
                             <input type="text" class="form-control" name="cluster_version"
                                    placeholder="Cluster Version">
                             <small id="emailHelp" class="form-text text-muted">Cluster是唯一主键</small>
                         </div>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-4">
                         <button type="submit" class="btn btn-primary" onclick="return checkNull()">Submit</button>
                     </div>
 
@@ -113,7 +98,6 @@
                 <table id="hdfs-table" data-toggle="table">
                     <thead>
                     <tr>
-                        <th>集群ID</th>
                         <th data-field="name">集群名称</th>
                         <th>集群类型</th>
                         <th>集群版本</th>
@@ -122,7 +106,6 @@
                     <tbody>
                     {% for object in AllclusterObject %}
                         <tr>
-                            <td>{{ object.cluster_id }}</td>
                             <td>{{ object.cluster_name }}</td>
                             <td>{{ object.cluster_type }}</td>
                             <td>{{ object.cluster_version }}</td>

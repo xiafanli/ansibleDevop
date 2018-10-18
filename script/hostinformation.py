@@ -9,6 +9,11 @@ from util.componetRegexMapping import component_mapping
 
 
 class InfoCollect(object):
+    STR_PHYSICAL = 'physical'
+    STR_VM = 'virtual'
+    STR_VM_FLAG = 'VMware'
+    HEADERS = {'content-type': 'application/json'}
+    REST_URL = 'http://10.0.0.254:8080/cmdb/%s'
 
     def exec_cmd(self, cmd):
         output = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -19,14 +24,10 @@ class InfoCollect(object):
 
 
 class HostInfoCollect(InfoCollect):
-    STR_PHYSICAL = 'physical'
-    STR_VM = 'virtual'
-    STR_VM_FLAG = 'VMware'
-    HEADERS = {'content-type': 'application/json'}
-    REST_URL = 'http://10.0.0.254:8080/cmdb/%s'
 
     def __init__(self):
         self.ip_exp = re.compile(u'10(\.(2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})){3}')
+        self.data = {}
 
     def get_hostname(self):
         hostname = self.exec_cmd('hostname').strip()
@@ -69,7 +70,7 @@ class HostInfoCollect(InfoCollect):
         os_version = self.get_os_version()
         machine_type = self.get_machine_type(serial_no)
 
-        data = {
+        self.data = {
             HostInfoFields.F_HOST_NAME: host_name,
             HostInfoFields.F_HOST_IP: ip_address,
             HostInfoFields.F_NUM_CPU: cpu_num,
@@ -78,28 +79,27 @@ class HostInfoCollect(InfoCollect):
             HostInfoFields.F_MACHINE_TYPE: machine_type,
             HostInfoFields.F_OS_VERSION: os_version
         }
-
-        return data
+        return self.data
 
     def push_host_info(self):
         ip_address = self.get_ip_address()
         get_request_url = self.REST_URL % ('hosts?ip=%s' % ip_address)
         post_request_url = self.REST_URL % 'hosts'
 
-        data = self.create_push_data()
+        self.data = self.create_push_data()
 
         try:
             result = requests.get(get_request_url)
             if result.status_code == 200:
                 json_result = result.json()
                 if len(json_result) == 0:
-                    post_result = requests.post(post_request_url, data=json.dumps(data), headers=self.HEADERS)
+                    post_result = requests.post(post_request_url, data=json.dumps(self.data), headers=self.HEADERS)
                     print(post_result.status_code)
 
                 else:
                     host_id = json_result[0][HostInfoFields.F_HOST_ID]
                     put_request_url = self.REST_URL % ('hosts/%s' % host_id)
-                    put_result = requests.put(put_request_url, data=json.dumps(data), headers=self.HEADERS)
+                    put_result = requests.put(put_request_url, data=json.dumps(self.data), headers=self.HEADERS)
                     print(put_result.status_code)
 
         except Exception as ex:
@@ -108,32 +108,39 @@ class HostInfoCollect(InfoCollect):
 
 class ComponentInfoCollect(InfoCollect):
 
-    def __init__(self):
-        self.component = []
+    def __init__(self, ip):
+        self.component = self.__get_copmponent_match_result()
+        self.ip = ip
 
-    def get_copmponent_match_result(self):
+    def __get_copmponent_match_result(self):
+        result = []
         processes = self.exec_cmd("ps -ef |grep java")
         for process in processes.split("\n"):
             for k, v in component_mapping.items():
                 match = re.findall(k, process)
                 if len(match) > 0:
-                    self.component.append(match[0])
+                    result.append(v)
+        return result
+
 
     def push_host_info(self):
-        pass
+        post_request_url = self.REST_URL % 'componenthost'
+        data = {'host_ip': self.ip,
+                'host_component': self.component}
+        try:
+            post_result = requests.post(post_request_url, data=json.dumps(data), headers=self.HEADERS)
+            print(post_result.status_code)
+        except Exception as ex:
+            print(ex.__str__())
 
 
 def main():
     host_collect = HostInfoCollect()
     host_collect.push_host_info()
-    component_collect = ComponentInfoCollect()
-    component_collect.get_copmponent_match_result()
-    print(component_collect.component)
+    ip = host_collect.data[HostInfoFields.F_HOST_IP]
+    component_collect = ComponentInfoCollect(ip)
+    component_collect.push_host_info()
 
 
 if __name__ == "__main__":
     main()
-
-
-
-

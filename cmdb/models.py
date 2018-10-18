@@ -13,7 +13,7 @@ class HostBasicInfo(models.Model):
     rack_id = models.CharField(max_length=10, null=True, default="", blank=True)
     num_cpu = models.CharField(max_length=10, default="")
     num_mem = models.CharField(max_length=10, default="")
-    os_version = models.CharField(max_length=30, null=True, default="", blank=True)
+    os_version = models.CharField(max_length=100, null=True, default="", blank=True)
     SERVER_TYPE = [('physical', 'physical'), ('virtual', 'virtual')]
     machine_type = models.CharField(max_length=10, choices=SERVER_TYPE, default="physical")
 
@@ -32,6 +32,7 @@ class HostBasicInfo(models.Model):
 
 
 class ClusterBasicInfo(models.Model):
+    cluster_id = models.IntegerField(primary_key=True, auto_created=True)
     cluster_name = models.CharField(max_length=16)
     cluster_type = models.CharField(max_length=30)
     cluster_version = models.CharField(max_length=30, default="", blank=True, null=True)
