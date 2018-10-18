@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from cmdb.common.requestsparam import ClusterHostMapRequestParam,ComponentHostMapRequestParm
 from cmdb.common.responsetool import ResponseTool
-from cmdb.common.field import HostInfoFields, ClusterFields
+from util.field import HostInfoFields, ClusterFields
 from .models import HostBasicInfo, ClusterHostMapping, ClusterBasicInfo, ComponentInfo, ComponentHostMapping
 from .serializers import HostBasicInfoModelSerializer, ClusterHostInfoSerializer, ClusterBasicInfoModelSerializer
 from django.shortcuts import render
@@ -141,36 +141,6 @@ class ClusterDetailsInfo(generics.RetrieveAPIView):
     serializer_class = ClusterHostInfoSerializer
 
 
-class ComponentIpMappingOp(generics.CreateAPIView):
-    def create(self, request, *args, **kwargs):
-        request_data = request.data
-        msg, is_success = self.create_component_host_map(request_data)
-        if not is_success:
-            return Response(ResponseTool.get_response_data(msg), status=status.HTTP_400_BAD_REQUEST)
-        else:
-            return Response(ResponseTool.get_response_data("Create component and host mapping sucessfully"),
-                            status=status.HTTP_201_CREATED)
-
-    def create_component_host_map(self, request_data):
-        host_ip = request_data.get(ComponentHostMapRequestParm.PARAM_HOST_IP)
-        print(host_ip)
-        if host_ip is None:
-            return "Missing parameter host_ip.", False
-        else:
-            host_info_queryset = HostBasicInfo.objects.filter(ip_address=host_ip)
-        host_component = request_data.get(ComponentHostMapRequestParm.PARAM_COMPONENT)
-        print(",".join(host_component) + "==========")
-        print(isinstance(host_component, list))
-        print(len(host_component))
-        if not isinstance(host_component, list) or len(host_component) == 0:
-            return "component not found on the server or type error.", False
-        for component in host_component:
-            component_queryset = ComponentInfo.objects.get_or_create(component_type=component)
-            mapping_query = ComponentHostMapping.objects.update_or_create(component_info=component_queryset[0],
-                                                                          host_info=host_info_queryset[0])
-        return "create or update host component mapping successfully.", True
-
-
 class ClusterIpMappingOp(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         msg_error = []
@@ -221,3 +191,33 @@ class ClusterIpMappingOp(generics.CreateAPIView):
         cls_ip_mapping = ClusterHostMapping(cluster_info=cluster_queryset[0], host_info=host_info_queryset[0])
         cls_ip_mapping.save()
         return "Create cluster and host mapping sucessfully.", True
+
+
+class ComponentIpMappingOp(generics.CreateAPIView):
+    def create(self, request, *args, **kwargs):
+        request_data = request.data
+        msg, is_success = self.create_component_host_map(request_data)
+        if not is_success:
+            return Response(ResponseTool.get_response_data(msg), status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(ResponseTool.get_response_data("Create component and host mapping sucessfully"),
+                            status=status.HTTP_201_CREATED)
+
+    def create_component_host_map(self, request_data):
+        host_ip = request_data.get(ComponentHostMapRequestParm.PARAM_HOST_IP)
+        print(host_ip)
+        if host_ip is None:
+            return "Missing parameter host_ip.", False
+        else:
+            host_info_queryset = HostBasicInfo.objects.filter(ip_address=host_ip)
+        host_component = request_data.get(ComponentHostMapRequestParm.PARAM_COMPONENT)
+        print(",".join(host_component) + "==========")
+        print(isinstance(host_component, list))
+        print(len(host_component))
+        if not isinstance(host_component, list) or len(host_component) == 0:
+            return "component not found on the server or type error.", False
+        for component in host_component:
+            component_queryset = ComponentInfo.objects.get_or_create(component_type=component)
+            ComponentHostMapping.objects.update_or_create(component_info=component_queryset[0],
+                                                                          host_info=host_info_queryset[0])
+        return "create or update host component mapping successfully.", True

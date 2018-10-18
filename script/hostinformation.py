@@ -4,8 +4,8 @@ import json
 import re
 
 
-from cmdb.common.field import HostInfoFields
-from cmdb.common.componetRegexMapping import component_mapping
+from util.field import HostInfoFields
+from util.componetRegexMapping import component_mapping
 
 
 class InfoCollect(object):

@@ -32,7 +32,6 @@ class HostBasicInfo(models.Model):
 
 
 class ClusterBasicInfo(models.Model):
-    cluster_id = models.IntegerField(primary_key=True)
     cluster_name = models.CharField(max_length=16)
     cluster_type = models.CharField(max_length=30)
     cluster_version = models.CharField(max_length=30, default="", blank=True, null=True)
@@ -49,7 +48,14 @@ class ComponentInfo(models.Model):
     component_version = models.CharField(max_length=30, default="0")
     host_info = models.ManyToManyField(HostBasicInfo, through="ComponentHostMapping")
 
+    def to_dict(self):
+        component_dict = {
+            'component_type': self.component_type,
+            'component_version': self.component_version
+        }
+        return component_dict
+
 
 class ComponentHostMapping(models.Model):
     component_info = models.ForeignKey(ComponentInfo, on_delete=models.CASCADE)
-    host_info = models.ForeignKey(HostBasicInfo, on_delete=models.CASCADE)
+    host_info = models.ForeignKey(HostBasicInfo, related_name="host_component", on_delete=models.CASCADE)

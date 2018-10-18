@@ -1,12 +1,12 @@
 from rest_framework import serializers
 
-from cmdb.common.field import HostInfoFields, ClusterFields, ComponentInfoFields
+from util.field import HostInfoFields, ClusterFields
 from .models import HostBasicInfo, ClusterBasicInfo
-from .models import ComponentInfo
 
 
 class HostBasicInfoModelSerializer(serializers.ModelSerializer):
     host_cluster = serializers.SerializerMethodField()
+    host_component = serializers.SerializerMethodField()
 
     class Meta:
         model = HostBasicInfo
@@ -21,6 +21,7 @@ class HostBasicInfoModelSerializer(serializers.ModelSerializer):
             HostInfoFields.F_MACHINE_TYPE,
             HostInfoFields.F_OS_VERSION,
             HostInfoFields.F_HOST_CLUSTER,
+            HostInfoFields.F_HOST_COMPNENET,
         )
 
     def get_host_cluster(self, obj):
@@ -29,6 +30,13 @@ class HostBasicInfoModelSerializer(serializers.ModelSerializer):
         for c in cls:
             cluster_names.append(c.cluster_info.cluster_name)
         return cluster_names
+
+    def get_host_component(self, obj):
+        all_components = obj.host_component.all()
+        component_names = []
+        for c in all_components:
+            component_names.append(c.component_info.to_dict())
+        return component_names
 
 
 class ClusterBasicInfoModelSerializer(serializers.ModelSerializer):
@@ -59,17 +67,7 @@ class ClusterHostInfoSerializer(serializers.ModelSerializer):
         cls_host_queryset = obj.mapping_basic.all()
         host_list = []
         for cluster_host in cls_host_queryset:
-            host_list.append(cluster_host.host_info.to_dict())
+            host_list.append(cluster_host.host_component.to_dict())
         return host_list
 
 
-class ComponentHostInfoSerializer(serializers.ModelSerializer):
-    component_info_list = serializers.SerializerMethodField()
-
-    class Meta:
-        model = ComponentInfo
-        fields = [
-            ComponentInfoFields.F_COMPONENT_TYPE,
-            ComponentInfoFields.F_COMPONENT_VERSION,
-            ComponentInfoFields.F_HOST_INFO_LIST
-        ]
