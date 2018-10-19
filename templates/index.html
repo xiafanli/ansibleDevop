@@ -31,7 +31,7 @@
             </li>
             <li class="sidebar-brand">
                 <a href="#">
-                    Graph Devops
+                    BG CMDB
                 </a>
             </li>
             <li>
@@ -69,11 +69,12 @@
                 <h1>大数据主机明细仪表盘</h1>
             </div>
             <div class="row">
-                <div class="col-lg-5">
-                    <div id="sexId" style="width: auto;height: 600px"></div>
+                <div class="col-lg-10">
+                    <div id="cluster" style="width: auto;height: 600px"></div>
                 </div>
-
-                <div class="col-lg-5 col-md-offset-2">
+            </div>
+            <div class="row">
+                <div class="col-lg-10 ">
                     <div id="sexId2" style="width: auto;height: 600px"></div>
                 </div>
             </div>
@@ -142,12 +143,21 @@
                 jdata = $.parseJSON(data)
             }
         })
+        var jdata2 = [];
+        $.ajax({
+            type: 'POST',
+            url: '/aggregatecomponent',
+            async: false,
+            success: function (data) {
+                jdata2 = $.parseJSON(data)
+            }
+        })
         {#var data = [#}
         {#    {name: '男生', value: 10},#}
         {#    {name: '女生', value: 20}#}
         {#];#}
         var option = MyEcharts.EchartsOption.pie("集群类型Summary", "单位（台）", jdata.result);
-        var initChart = MyEcharts.initChart(option, "sexId");//sexId是div的id
+        var initChart = MyEcharts.initChart(option, "cluster");//sexId是div的id
         var options = {
             grid: {
                 left: '15%',
@@ -170,7 +180,7 @@
                 center: ['50%', '50%'],//位置居中
             }]
         };
-        var option2 = MyEcharts.EchartsOption.pie("组件类型Summary", "单位（台）", jdata.result);
+        var option2 = MyEcharts.EchartsOption.pie("组件类型Summary", "单位（台）", jdata2.result);
         var initChart2 = MyEcharts.initChart(option2, "sexId2");//sexId是div的id
         var options2 = {
             grid: {
@@ -181,9 +191,9 @@
             },
             legend: {
                 orient: 'vertical', //垂直：vertical； 水平 horizontal
-                right: 'right',
+                right: '-45',
                 textStyle: {
-                    fontSize: 15
+                    fontSize: 10
                 }
             },
             textStyle: {

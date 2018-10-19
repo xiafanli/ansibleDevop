@@ -31,12 +31,11 @@ def cluster_info(request):
         cluster_type = request.POST['cluster_type']
         cluster_version = request.POST['cluster_version']
         clusterObject = ClusterBasicInfo.objects.update_or_create(
-            # cluster_id=cluster_id,
             cluster_name=cluster_name,
             cluster_type=cluster_type,
             cluster_version=cluster_version
         )
-        clusterObject.save()
+        # clusterObject.save()
         AllclusterObject = ClusterBasicInfo.objects.all().order_by(ClusterFields.F_CLUSTER_ID)
     else:
         AllclusterObject = ClusterBasicInfo.objects.all().order_by(ClusterFields.F_CLUSTER_ID)
@@ -66,10 +65,10 @@ def aggregate_componet(request):
     host = ComponentHostMapping.objects.all()
     for i in host:
         if i.component_info.component_type in component_count:
-            cluster_count[i.component_info.component_type] += 1
+            component_count[i.component_info.component_type] += 1
         else:
-            cluster_count[i.component_info.component_type] = 1
-    for k, v in cluster_count.items():
+            component_count[i.component_info.component_type] = 1
+    for k, v in component_count.items():
         result.append({'name': k, 'value': v})
     return JsonResponse(json.dumps({"result": result}), safe=False)
 
@@ -90,7 +89,7 @@ def get_cluster_info_by_ip(request):
     for host in host_object:
         cluster = [info.cluster_info.cluster_name for info in host.host_cluster.all()]
         component = [info.component_info.component_type for info in host.host_component.all()]
-    return JsonResponse(json.dumps({'cluster': "\t".join(cluster), 'component': " ".join(component)}), safe=False)
+    return JsonResponse(json.dumps({'cluster': "\t".join(cluster), 'component': ", ".join(component)}), safe=False)
 
 
 # rest interface

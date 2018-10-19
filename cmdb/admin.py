@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.contrib import admin
-from .models import HostBasicInfo, ClusterBasicInfo, ClusterHostMapping
+from .models import HostBasicInfo, ClusterBasicInfo, ClusterHostMapping, ComponentInfo
 
 
 # Register your models here.
@@ -36,4 +36,13 @@ class ClusterBasicInfoAdmin(admin.ModelAdmin):
         'cluster_name',
         'cluster_type',
         'cluster_version'
+    ]
+
+
+@admin.register(ComponentInfo)
+class ComponentInfoAdmin(admin.ModelAdmin):
+
+    list_display = [
+        'component_type',
+        'component_version'
     ]
