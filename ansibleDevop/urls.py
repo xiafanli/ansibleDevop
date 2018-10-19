@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^host', host_info, name='cluster'),
     url(r'^getclusterinfo$', get_cluster_info_by_ip, name='getclusterinfo'),
     url(r'^aggregatecluster$', aggregate_cluster, name='aggregatecluster'),
+    url(r'^aggregatecomponent$', aggregate_componet, name='aggregatecomponent$'),
     # """
     # the following two lines is use for restful interface
     # """

@@ -69,8 +69,12 @@
                 <h1>大数据主机明细仪表盘</h1>
             </div>
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-5">
                     <div id="sexId" style="width: auto;height: 600px"></div>
+                </div>
+
+                <div class="col-lg-5 col-md-offset-2">
+                    <div id="sexId2" style="width: auto;height: 600px"></div>
                 </div>
             </div>
         </div>
@@ -142,7 +146,7 @@
         {#    {name: '男生', value: 10},#}
         {#    {name: '女生', value: 20}#}
         {#];#}
-        var option = MyEcharts.EchartsOption.pie("服务器明细图", "单位（台）", jdata.result);
+        var option = MyEcharts.EchartsOption.pie("集群类型Summary", "单位（台）", jdata.result);
         var initChart = MyEcharts.initChart(option, "sexId");//sexId是div的id
         var options = {
             grid: {
@@ -166,7 +170,32 @@
                 center: ['50%', '50%'],//位置居中
             }]
         };
+        var option2 = MyEcharts.EchartsOption.pie("组件类型Summary", "单位（台）", jdata.result);
+        var initChart2 = MyEcharts.initChart(option2, "sexId2");//sexId是div的id
+        var options2 = {
+            grid: {
+                left: '15%',
+                top: '15%',
+                right: '15%',
+                bottom: '15%',
+            },
+            legend: {
+                orient: 'vertical', //垂直：vertical； 水平 horizontal
+                right: 'right',
+                textStyle: {
+                    fontSize: 15
+                }
+            },
+            textStyle: {
+                fontSize: 15
+            },
+            series: [{
+                radius: '80%', //圆的大小
+                center: ['50%', '50%'],//位置居中
+            }]
+        };
         initChart.setOption(options);
+        initChart2.setOption(options2);
     });
 </script>
 </body>

@@ -60,6 +60,21 @@ def aggregate_cluster(request):
 
 
 @login_required(login_url="/login")
+def aggregate_componet(request):
+    component_count = {}
+    result = []
+    host = ComponentHostMapping.objects.all()
+    for i in host:
+        if i.component_info.component_type in component_count:
+            cluster_count[i.component_info.component_type] += 1
+        else:
+            cluster_count[i.component_info.component_type] = 1
+    for k, v in cluster_count.items():
+        result.append({'name': k, 'value': v})
+    return JsonResponse(json.dumps({"result": result}), safe=False)
+
+
+@login_required(login_url="/login")
 def host_info(request):
     AllhostObject = HostBasicInfo.objects.all().order_by(HostInfoFields.F_HOST_IP)
     return render(request, 'host.html', {"AllhostObject": AllhostObject})
@@ -68,12 +83,14 @@ def host_info(request):
 @login_required(login_url="/login")
 def get_cluster_info_by_ip(request):
     cluster = []
+    component = []
     ip = request.POST['ip']
+    # ip = "10.0.0.100"
     host_object = HostBasicInfo.objects.filter(ip_address=ip)
     for host in host_object:
-        for info in host.host_cluster.all():
-            cluster.append(info.cluster_info.cluster_name)
-    return JsonResponse(json.dumps({'cluster': "\t".join(cluster)}), safe=False)
+        cluster = [info.cluster_info.cluster_name for info in host.host_cluster.all()]
+        component = [info.component_info.component_type for info in host.host_component.all()]
+    return JsonResponse(json.dumps({'cluster': "\t".join(cluster), 'component': " ".join(component)}), safe=False)
 
 
 # rest interface

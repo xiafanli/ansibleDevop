@@ -188,8 +188,10 @@
                 jdata = $.parseJSON(data);
             },
         });
+        html.push("<p><b>集群信息</b></p>")
         html.push('<p><b>' + jdata.cluster + ' </p></b>')
-        html.push('<p><b>' + jdata.cluster + ' </p></b>')
+        html.push("<p><b>组件信息</b></p>")
+        html.push('<p><b>' + jdata.component + ' </p></b>')
         return html.join('');
     }
 </script>
