@@ -17,6 +17,7 @@
         }
     </style>
 </head>
+
 <body>
 
 <div id="wrapper">
@@ -98,6 +99,7 @@
                 <table id="hdfs-table" data-toggle="table">
                     <thead>
                     <tr>
+                        <th>ID</th>
                         <th data-field="name">集群名称</th>
                         <th>集群类型</th>
                         <th>集群版本</th>
@@ -105,7 +107,8 @@
                     </thead>
                     <tbody>
                     {% for object in AllclusterObject %}
-                        <tr>
+                        <tr data-toggle="modal" data-target="#myModal">
+                            <td>{{ object.cluster_id }}</td>
                             <td>{{ object.cluster_name }}</td>
                             <td>{{ object.cluster_type }}</td>
                             <td>{{ object.cluster_version }}</td>
@@ -114,64 +117,118 @@
                     </tbody>
                 </table>
             </div>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                模态框（Modal）标题
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                            在这里添加一些文本
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                            </button>
+                            <button type="button" class="btn btn-primary">
+                                提交更改
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                            模态框（Modal）标题
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        在这里添加一些文本
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            提交更改
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
         </div>
     </div>
-    <!-- /#page-content-wrapper -->
+    <!-- /#wrapper -->
 
-</div>
-<!-- /#wrapper -->
-
-<script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-<script src="{% static 'bootstraptable/bootstrap-table.min.js' %}"></script>
-<script type="text/javascript">
-    function checkNull() {
-        var num = 0;
-        var str = "";
-        $("input[type$='text']").each(function (n) {
-            if ($(this).val() == "") {
-                num++;
-                str += $(this).attr("name") + "不能为空！\r\n";
+    <script src="{% static 'js/jquery-1.11.3.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'bootstraptable/bootstrap-table.min.js' %}"></script>
+    <script type="text/javascript">
+        function checkNull() {
+            var num = 0;
+            var str = "";
+            $("input[type$='text']").each(function (n) {
+                if ($(this).val() == "") {
+                    num++;
+                    str += $(this).attr("name") + "不能为空！\r\n";
+                }
+            });
+            if (num > 0) {
+                alert(str);
+                return false;
             }
-        });
-        if (num > 0) {
-            alert(str);
-            return false;
+            else {
+                return true;
+            }
         }
-        else {
-            return true;
-        }
-    }
-</script>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var trigger = $('.hamburger'),
-            overlay = $('.overlay'),
-            isClosed = false;
 
-        trigger.click(function () {
-            hamburger_cross();
+        $('tr').click(function () {
+            $("#myModalLabel").text("新增");
+            $('#myModal').modal();
         });
-
-        function hamburger_cross() {
-
-            if (isClosed == true) {
-                overlay.hide();
-                trigger.removeClass('is-open');
-                trigger.addClass('is-closed');
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var trigger = $('.hamburger'),
+                overlay = $('.overlay'),
                 isClosed = false;
-            } else {
-                overlay.show();
-                trigger.removeClass('is-closed');
-                trigger.addClass('is-open');
-                isClosed = true;
-            }
-        }
 
-        $('[data-toggle="offcanvas"]').click(function () {
-            $('#wrapper').toggleClass('toggled');
+            trigger.click(function () {
+                hamburger_cross();
+            });
+
+            function hamburger_cross() {
+
+                if (isClosed == true) {
+                    overlay.hide();
+                    trigger.removeClass('is-open');
+                    trigger.addClass('is-closed');
+                    isClosed = false;
+                } else {
+                    overlay.show();
+                    trigger.removeClass('is-closed');
+                    trigger.addClass('is-open');
+                    isClosed = true;
+                }
+            }
+
+            $('[data-toggle="offcanvas"]').click(function () {
+                $('#wrapper').toggleClass('toggled');
+            });
+
         });
-    });
-</script>
+    </script>
 </body>
 </html>

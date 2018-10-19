@@ -69,12 +69,12 @@
                 <h1>大数据主机明细仪表盘</h1>
             </div>
             <div class="row">
-                <div class="col-lg-10">
+                <div class="col-lg-12">
                     <div id="cluster" style="width: auto;height: 600px"></div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-lg-10 ">
+                <div class="col-lg-12">
                     <div id="sexId2" style="width: auto;height: 600px"></div>
                 </div>
             </div>
@@ -180,30 +180,9 @@
                 center: ['50%', '50%'],//位置居中
             }]
         };
-        var option2 = MyEcharts.EchartsOption.pie("组件类型Summary", "单位（台）", jdata2.result);
+        var option2 = MyEcharts.EchartsOption.bar("组件类型Summary", "单位（台）", jdata2.result);
         var initChart2 = MyEcharts.initChart(option2, "sexId2");//sexId是div的id
-        var options2 = {
-            grid: {
-                left: '15%',
-                top: '15%',
-                right: '15%',
-                bottom: '15%',
-            },
-            legend: {
-                orient: 'vertical', //垂直：vertical； 水平 horizontal
-                right: '-45',
-                textStyle: {
-                    fontSize: 10
-                }
-            },
-            textStyle: {
-                fontSize: 15
-            },
-            series: [{
-                radius: '80%', //圆的大小
-                center: ['50%', '50%'],//位置居中
-            }]
-        };
+
         initChart.setOption(options);
         initChart2.setOption(options2);
     });

@@ -19,9 +19,8 @@ from cmdb.views import *
 from django.conf.urls import url
 from django.contrib import admin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.views.generic import TemplateView
 from cmdb.views import *
-from django.conf import settings
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -39,8 +38,5 @@ urlpatterns = [
     # """
     # the following two lines is use for restful interface
     # """
-    #url(r'^api/$', HostBasicInfoList.as_view()),
-    #url(r'^api/(?P<pk>[0-9]+)/$', HostBasicInfoDetail.as_view()),
-    #url(r'^api/fetch/$', HostBasicInfoFetchOne.as_view()),
     path('cmdb/', include('cmdb.urls'))
 ]

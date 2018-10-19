@@ -30,7 +30,7 @@ def cluster_info(request):
         cluster_name = request.POST['cluster_name']
         cluster_type = request.POST['cluster_type']
         cluster_version = request.POST['cluster_version']
-        clusterObject = ClusterBasicInfo.objects.update_or_create(
+        ClusterBasicInfo.objects.update_or_create(
             cluster_name=cluster_name,
             cluster_type=cluster_type,
             cluster_version=cluster_version
@@ -84,7 +84,6 @@ def get_cluster_info_by_ip(request):
     cluster = []
     component = []
     ip = request.POST['ip']
-    # ip = "10.0.0.100"
     host_object = HostBasicInfo.objects.filter(ip_address=ip)
     for host in host_object:
         cluster = [info.cluster_info.cluster_name for info in host.host_cluster.all()]
@@ -228,15 +227,12 @@ class ComponentIpMappingOp(generics.CreateAPIView):
 
     def create_component_host_map(self, request_data):
         host_ip = request_data.get(ComponentHostMapRequestParm.PARAM_HOST_IP)
-        print(host_ip)
         if host_ip is None:
             return "Missing parameter host_ip.", False
         else:
             host_info_queryset = HostBasicInfo.objects.filter(ip_address=host_ip)
         host_component = request_data.get(ComponentHostMapRequestParm.PARAM_COMPONENT)
-        print(",".join(host_component) + "==========")
-        print(isinstance(host_component, list))
-        print(len(host_component))
+
         if not isinstance(host_component, list) or len(host_component) == 0:
             return "component not found on the server or type error.", False
         for component in host_component:
