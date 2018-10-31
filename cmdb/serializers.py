@@ -35,7 +35,7 @@ class HostBasicInfoModelSerializer(serializers.ModelSerializer):
         all_components = obj.host_component.all()
         component_names = []
         for c in all_components:
-            component_names.append(c.component_info.component_type)
+            component_names.append(c.component_info.to_dict())
         return component_names
 
 

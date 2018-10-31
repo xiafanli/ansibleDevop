@@ -15,3 +15,15 @@ component_mapping = {
     "org.apache.hadoop.hbase.master.HMaster": "Hmaster",
     "org.apache.hadoop.hbase.regionserver.HRegionServer": "HRegionServer"
     }
+
+COMPONENT_LIB_PATH = {
+    'Kafka': ['/bankapp/bankdplyop/kafka/libs', 'bankapp/kafka/kafka/libs', '/home/bankdplyop/kafka/libs',
+              '/wls/kafka/kafka_2.11-0.10.0.1/libs', '/home/kafka/kafka/libs'],
+    'Zookeeper': ['/usr/lib/zookeeper', '/home/zookeeper/zookeeper', '/wls/kafka/zookeeper-3.4.6',
+                  '/bankapp/zookeeper/zookeeper']
+}
+
+COMPONENT_LIB_NAME_REGEX = {
+    'Kafka': '^kafka_2.11-([\d+.]+).jar$',
+    'Zookeeper': '^zookeeper-([\d+\-cdh.]+).jar$'
+}

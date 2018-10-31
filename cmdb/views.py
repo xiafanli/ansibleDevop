@@ -218,25 +218,39 @@ class ClusterIpMappingOp(generics.CreateAPIView):
 class ComponentIpMappingOp(generics.CreateAPIView):
     def create(self, request, *args, **kwargs):
         request_data = request.data
-        msg, is_success = self.create_component_host_map(request_data)
-        if not is_success:
-            return Response(ResponseTool.get_response_data(msg), status=status.HTTP_400_BAD_REQUEST)
+        msg_error = []
+        for one_item in request_data:
+            msg, is_success = self.create_component_host_map(one_item)
+            if not is_success:
+                msg_error.append(msg)
+
+        if len(msg_error) > 0:
+            return Response(ResponseTool.get_response_data(msg_error), status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(ResponseTool.get_response_data("Create component and host mapping sucessfully"),
                             status=status.HTTP_201_CREATED)
 
-    def create_component_host_map(self, request_data):
-        host_ip = request_data.get(ComponentHostMapRequestParm.PARAM_HOST_IP)
+    def create_component_host_map(self, one_item):
+        host_ip = one_item.get(ComponentHostMapRequestParm.PARAM_HOST_IP)
         if host_ip is None:
             return "Missing parameter host_ip.", False
         else:
             host_info_queryset = HostBasicInfo.objects.filter(ip_address=host_ip)
-        host_component = request_data.get(ComponentHostMapRequestParm.PARAM_COMPONENT)
 
-        if not isinstance(host_component, list) or len(host_component) == 0:
+        if host_info_queryset.count() < 1:
+            return "host %s doesn't exist" % host_ip, False
+
+        component_type = one_item.get(ComponentHostMapRequestParm.COMPONENT_TYPE)
+        component_version = one_item.get(ComponentHostMapRequestParm.COMPONENT_VERSION)
+
+        if len(component_type) == 0:
             return "component not found on the server or type error.", False
-        for component in host_component:
-            component_queryset = ComponentInfo.objects.get_or_create(component_type=component)
-            ComponentHostMapping.objects.update_or_create(component_info=component_queryset[0],
-                                                                          host_info=host_info_queryset[0])
+
+        if len(component_version) == 0:
+            return "component version is None.", False
+
+        component_queryset = ComponentInfo.objects.get_or_create(component_type=component_type,
+                                                                 component_version=component_version)
+        ComponentHostMapping.objects.update_or_create(component_info=component_queryset[0],
+                                                      host_info=host_info_queryset[0])
         return "create or update host component mapping successfully.", True

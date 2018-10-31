@@ -9,4 +9,5 @@ class ClusterHostMapRequestParam:
 
 class ComponentHostMapRequestParm:
     PARAM_HOST_IP = "host_ip"
-    PARAM_COMPONENT = "host_component"
+    COMPONENT_TYPE = "component_type"
+    COMPONENT_VERSION = "component_version"

@@ -2,18 +2,25 @@ import requests
 import subprocess
 import json
 import re
+import os
+import sys
 
-
+from cmdb.common.requestsparam import ComponentHostMapRequestParm
 from util.field import HostInfoFields
-from util.componetRegexMapping import component_mapping
+from util.componetRegexMapping import component_mapping, COMPONENT_LIB_PATH, COMPONENT_LIB_NAME_REGEX
 
+
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 class InfoCollect(object):
     STR_PHYSICAL = 'physical'
     STR_VM = 'virtual'
     STR_VM_FLAG = 'VMware'
     HEADERS = {'content-type': 'application/json'}
-    REST_URL = 'http://10.0.0.254:8080/cmdb/%s'
+
+    def __init__(self, server_ip, port):
+        self.REST_URL = 'http://%s:%s/cmdb/' % (server_ip, port) + '%s'
 
     def exec_cmd(self, cmd):
         output = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -25,11 +32,13 @@ class InfoCollect(object):
 
 class HostInfoCollect(InfoCollect):
 
-    def __init__(self):
+    def __init__(self, server_ip, port):
+        super(HostInfoCollect, self).__init__(server_ip, port)
         self.ip_exp = re.compile(u'10(\.(2(5[0-5]{1}|[0-4]\d{1})|[0-1]?\d{1,2})){3}')
         self.data = {}
 
     def get_hostname(self):
+        super(HostInfoCollect, self)
         hostname = self.exec_cmd('hostname').strip()
         return hostname
 
@@ -69,6 +78,8 @@ class HostInfoCollect(InfoCollect):
         ip_address = self.get_ip_address()
         os_version = self.get_os_version()
         machine_type = self.get_machine_type(serial_no)
+        if machine_type == self.STR_VM:
+            serial_no = '0'
 
         self.data = {
             HostInfoFields.F_HOST_NAME: host_name,
@@ -94,12 +105,14 @@ class HostInfoCollect(InfoCollect):
                 json_result = result.json()
                 if len(json_result) == 0:
                     post_result = requests.post(post_request_url, data=json.dumps(self.data), headers=self.HEADERS)
+                    post_result.raise_for_status()
                     print(post_result.status_code)
 
                 else:
                     host_id = json_result[0][HostInfoFields.F_HOST_ID]
                     put_request_url = self.REST_URL % ('hosts/%s' % host_id)
                     put_result = requests.put(put_request_url, data=json.dumps(self.data), headers=self.HEADERS)
+                    put_result.raise_for_status()
                     print(put_result.status_code)
 
         except Exception as ex:
@@ -108,9 +121,10 @@ class HostInfoCollect(InfoCollect):
 
 class ComponentInfoCollect(InfoCollect):
 
-    def __init__(self, ip):
-        self.component = self.__get_copmponent_match_result()
+    def __init__(self, ip, server_ip, port):
+        super(ComponentInfoCollect, self).__init__(server_ip, port)
         self.ip = ip
+        self.component = self.__get_copmponent_match_result()
 
     def __get_copmponent_match_result(self):
         result = []
@@ -119,27 +133,50 @@ class ComponentInfoCollect(InfoCollect):
             for k, v in component_mapping.items():
                 match = re.findall(k, process)
                 if len(match) > 0:
-                    result.append(v)
+                    comp_version = self.get_component_version(v)
+                    result.append({ComponentHostMapRequestParm.PARAM_HOST_IP: self.ip,
+                                   ComponentHostMapRequestParm.COMPONENT_TYPE: v,
+                                   ComponentHostMapRequestParm.COMPONENT_VERSION: comp_version})
         return result
+
+    def get_component_version(self, component_name):
+        candidate_paths = COMPONENT_LIB_PATH.get(component_name)
+        pattern = re.compile(COMPONENT_LIB_NAME_REGEX.get(component_name))
+        for path_str in candidate_paths:
+            if os.path.exists(path_str):
+                result = self.exec_cmd('ls -1 %s' % path_str)
+                ret_list = result.split('\n')
+                for filename in ret_list:
+                    match_result = pattern.match(filename)
+                    if match_result is not None:
+                        return match_result.group(1)
+
+        return 'Unknown'
 
     def push_host_info(self):
         post_request_url = self.REST_URL % 'componenthost'
-        data = {'host_ip': self.ip,
-                'host_component': self.component}
+        data = self.component
         try:
             post_result = requests.post(post_request_url, data=json.dumps(data), headers=self.HEADERS)
+            post_result.raise_for_status()
             print(post_result.status_code)
         except Exception as ex:
             print(ex.__str__())
 
 
-def main():
-    host_collect = HostInfoCollect()
+def main(argv):
+    if len(argv) < 3:
+        print("missing parameter.")
+        exit(1)
+
+    server_ip = argv[1]
+    port = argv[2]
+    host_collect = HostInfoCollect(server_ip, port)
     host_collect.push_host_info()
     ip = host_collect.data[HostInfoFields.F_HOST_IP]
-    component_collect = ComponentInfoCollect(ip)
+    component_collect = ComponentInfoCollect(ip, server_ip, port)
     component_collect.push_host_info()
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)
