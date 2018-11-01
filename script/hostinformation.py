@@ -4,6 +4,7 @@ import json
 import re
 import os
 import sys
+import glob
 
 from cmdb.common.requestsparam import ComponentHostMapRequestParm
 from util.field import HostInfoFields
@@ -139,17 +140,26 @@ class ComponentInfoCollect(InfoCollect):
                                    ComponentHostMapRequestParm.COMPONENT_VERSION: comp_version})
         return result
 
+    def exist_path(self, path_name):
+        if path_name.find("*") < 0:
+            return os.path.exists(path_name)
+        else:
+            return len(glob.glob(path_name)) > 0
+
+
     def get_component_version(self, component_name):
         candidate_paths = COMPONENT_LIB_PATH.get(component_name)
         pattern = re.compile(COMPONENT_LIB_NAME_REGEX.get(component_name))
         for path_str in candidate_paths:
-            if os.path.exists(path_str):
+            if self.exist_path(path_str):
                 result = self.exec_cmd('ls -1 %s' % path_str)
                 ret_list = result.split('\n')
                 for filename in ret_list:
                     match_result = pattern.match(filename)
                     if match_result is not None:
-                        return match_result.group(1)
+                        for version in match_result.groups():
+                            if version is not None:
+                                return version
 
         return 'Unknown'
 

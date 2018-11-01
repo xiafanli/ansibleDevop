@@ -32,3 +32,8 @@ class ComponentHostMapFields:
     F_COMPONENT_HOSTNAME = "host_name"
     F_COMPONENT_IP = "ip_address"
     F_HOST_INFO = "component_info"
+
+
+class ComponentInfoFields:
+    F_COMPONENT_TYPE = 'component_type'
+    F_COMPONENT_VERSION = 'component_version'

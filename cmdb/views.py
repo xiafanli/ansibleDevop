@@ -8,8 +8,8 @@ from cmdb.common.requestsparam import ClusterHostMapRequestParam,ComponentHostMa
 from cmdb.common.responsetool import ResponseTool
 from util.field import HostInfoFields, ClusterFields
 from .models import HostBasicInfo, ClusterHostMapping, ClusterBasicInfo, ComponentInfo, ComponentHostMapping
-from .serializers import HostBasicInfoModelSerializer, ClusterHostInfoSerializer, ClusterBasicInfoModelSerializer,\
-    ClusterBasicInfoModelCreateSerializer
+from .serializers import HostBasicInfoModelSerializer, ClusterHostInfoSerializer, ClusterBasicInfoModelSerializer, \
+    ClusterBasicInfoModelCreateSerializer, ComponentInfoSerializer
 from django.shortcuts import render
 from django.http import JsonResponse
 from cmdb.common import options
@@ -163,6 +163,11 @@ class ClusterDetailsInfo(generics.RetrieveAPIView):
     serializer_class = ClusterHostInfoSerializer
 
 
+class ComponentInfoList(generics.ListAPIView):
+    queryset = ComponentInfo.objects.all()
+    serializer_class = ComponentInfoSerializer
+
+
 class ClusterIpMappingOp(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
@@ -208,7 +213,9 @@ class ClusterIpMappingOp(generics.CreateAPIView):
         mapping_queryset = ClusterHostMapping.objects.filter(cluster_info=cluster_queryset[0],
                                                              host_info=host_info_queryset[0])
         if mapping_queryset.count() > 0:
-            return "The mapping of cluster %s and host %s has exist." % (cluster_name, host_ip), False
+            return "The mapping of cluster %s and host %s has exist." % \
+                   (cluster_name if cluster_name is not None else cluster_id,
+                    host_ip), False
 
         cls_ip_mapping = ClusterHostMapping(cluster_info=cluster_queryset[0], host_info=host_info_queryset[0])
         cls_ip_mapping.save()
@@ -227,7 +234,7 @@ class ComponentIpMappingOp(generics.CreateAPIView):
         if len(msg_error) > 0:
             return Response(ResponseTool.get_response_data(msg_error), status=status.HTTP_400_BAD_REQUEST)
         else:
-            return Response(ResponseTool.get_response_data("Create component and host mapping sucessfully"),
+            return Response(ResponseTool.get_response_data("Create or update component and host mapping sucessfully"),
                             status=status.HTTP_201_CREATED)
 
     def create_component_host_map(self, one_item):
@@ -251,6 +258,26 @@ class ComponentIpMappingOp(generics.CreateAPIView):
 
         component_queryset = ComponentInfo.objects.get_or_create(component_type=component_type,
                                                                  component_version=component_version)
-        ComponentHostMapping.objects.update_or_create(component_info=component_queryset[0],
+
+        comp_host_queryset = ComponentHostMapping.objects.filter(host_info=host_info_queryset[0])
+
+        to_delete_records = []
+        exist_record = False
+        for comp_host in comp_host_queryset:
+            if comp_host.component_info.component_type == component_type:
+                if comp_host.component_info.component_version != component_version:
+                    to_delete_records.append(comp_host)
+                else:
+                    exist_record = True
+
+        for comp_host in to_delete_records:
+            queryset = ComponentHostMapping.objects.filter(host_info=comp_host.host_info,
+                                                           component_info=comp_host.component_info)
+            queryset.delete()
+
+        if not exist_record:
+            ComponentHostMapping.objects.create(component_info=component_queryset[0],
                                                       host_info=host_info_queryset[0])
-        return "create or update host component mapping successfully.", True
+            return "create or update host component mapping successfully.", True
+        else:
+            return "Host component mapping has exist.", True

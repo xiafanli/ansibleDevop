@@ -13,4 +13,5 @@ urlpatterns = [
     url('hosts[/]?', views.HostInfo.as_view()),
     url('clusterhost[/]?', views.ClusterIpMappingOp.as_view()),
     url('componenthost[/]?', views.ComponentIpMappingOp.as_view()),
+    url('components[/]?', views.ComponentInfoList.as_view()),
 ]

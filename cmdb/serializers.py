@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from util.field import HostInfoFields, ClusterFields
-from .models import HostBasicInfo, ClusterBasicInfo
+from util.field import HostInfoFields, ClusterFields, ComponentInfoFields
+from .models import HostBasicInfo, ClusterBasicInfo, ComponentInfo
 
 
 class HostBasicInfoModelSerializer(serializers.ModelSerializer):
@@ -60,6 +60,15 @@ class ClusterBasicInfoModelCreateSerializer(serializers.ModelSerializer):
         )
 
 
+class ComponentInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ComponentInfo
+        fields = (
+            ComponentInfoFields.F_COMPONENT_TYPE,
+            ComponentInfoFields.F_COMPONENT_VERSION,
+        )
+
+
 class ClusterHostInfoSerializer(serializers.ModelSerializer):
     host_info_list = serializers.SerializerMethodField()
 
@@ -77,7 +86,14 @@ class ClusterHostInfoSerializer(serializers.ModelSerializer):
         cls_host_queryset = obj.mapping_basic.all()
         host_list = []
         for cluster_host in cls_host_queryset:
-            host_list.append(cluster_host.host_component.to_dict())
+            host_comp_queryset = cluster_host.host_info.host_component.all()
+            host_info_dict = cluster_host.host_info.to_dict()
+            host_components = []
+            for host_comp in host_comp_queryset:
+                host_components.append(host_comp.component_info.to_dict())
+
+            host_info_dict.update({HostInfoFields.F_HOST_COMPNENET: host_components})
+            host_list.append(host_info_dict)
         return host_list
 
 

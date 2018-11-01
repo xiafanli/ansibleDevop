@@ -7,10 +7,10 @@ from django.db import models
 
 
 class HostBasicInfo(models.Model):
-    host_name = models.CharField(max_length=30,  null=True, default="", blank=True)
+    host_name = models.CharField(max_length=32,  null=True, default="", blank=True)
     ip_address = models.CharField(max_length=16)
-    serial = models.CharField(max_length=10, null=True, default="", blank=True)
-    rack_id = models.CharField(max_length=10, null=True, default="", blank=True)
+    serial = models.CharField(max_length=32, null=True, default="", blank=True)
+    rack_id = models.CharField(max_length=32, null=True, default="", blank=True)
     num_cpu = models.CharField(max_length=10, default="")
     num_mem = models.CharField(max_length=10, default="")
     os_version = models.CharField(max_length=100, null=True, default="", blank=True)
