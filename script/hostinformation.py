@@ -6,13 +6,14 @@ import os
 import sys
 import glob
 
+
 from cmdb.common.requestsparam import ComponentHostMapRequestParm
 from util.field import HostInfoFields
 from util.componetRegexMapping import component_mapping, COMPONENT_LIB_PATH, COMPONENT_LIB_NAME_REGEX
 
-
-reload(sys)
-sys.setdefaultencoding('utf8')
+if sys.version < '3':
+    reload(sys)
+    sys.setdefaultencoding('utf8')
 
 class InfoCollect(object):
     STR_PHYSICAL = 'physical'
@@ -25,7 +26,7 @@ class InfoCollect(object):
 
     def exec_cmd(self, cmd):
         output = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        return output.communicate()[0]
+        return output.communicate()[0].decode()
 
     def push_host_info(self):
         pass
