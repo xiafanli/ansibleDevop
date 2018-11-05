@@ -3,6 +3,7 @@ import subprocess
 import json
 import re
 import os
+import math
 import sys
 import glob
 
@@ -50,7 +51,11 @@ class HostInfoCollect(InfoCollect):
 
     def get_memory(self):
         memsize = self.exec_cmd("free -g | grep Mem | awk '{print $2}'")
-        return memsize
+        canonical_memsize1 = 1 << int(math.ceil(math.log(int(memsize), 2))) - 1
+        minus_val = int(memsize) - canonical_memsize1
+        canonical_memsize2 = 1 << int(math.ceil(math.log(minus_val, 2)))
+        canonical_memsize = canonical_memsize1 + canonical_memsize2
+        return canonical_memsize
 
     def get_serial_no(self):
         serial_no = self.exec_cmd("dmidecode -t 1 |grep 'Serial Number'|awk -F: '{print $2}'").strip()
