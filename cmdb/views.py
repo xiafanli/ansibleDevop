@@ -17,10 +17,12 @@ import json
 from django.contrib.auth.decorators import login_required
 from cmdb.scheculer.schedulers import JobScheduler
 from cmdb.scheculer.schedulers import CollectHostInfo
+import logging
 
+logger = logging.getLogger(__name__)
 
 task_scheduler = JobScheduler()
-task_scheduler.add_job(CollectHostInfo(options.IDC_INFO_WEB_SERVER_IP).update_host_info_from_idc, "job1", 60)
+task_scheduler.add_job(CollectHostInfo(options.IDC_INFO_WEB_SERVER_IP).update_host_info_from_idc, "job1", 5)
 task_scheduler.start()
 
 # view interface
@@ -128,6 +130,7 @@ class ClusterInfo(generics.ListCreateAPIView):
     queryset = ClusterBasicInfo.objects.all()
     serializer_class = ClusterBasicInfoModelSerializer
 
+
     def create(self, request, *args, **kwargs):
         self.serializer_class = ClusterBasicInfoModelCreateSerializer
         # cluster_id = request.data[ClusterFields.F_CLUSTER_ID]
@@ -164,6 +167,7 @@ class ClusterInfoRUD(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ClusterBasicInfoModelSerializer
 
 
+
 class ClusterDetailsInfo(generics.RetrieveAPIView):
     queryset = ClusterBasicInfo.objects.all()
     serializer_class = ClusterHostInfoSerializer
@@ -177,6 +181,7 @@ class ComponentInfoList(generics.ListAPIView):
 class ClusterIpMappingOp(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
+        logger.info("####call ClusterIpMappingOp.create")
         msg_error = []
         request_data = request.data
         for one_record in request_data:

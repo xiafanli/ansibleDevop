@@ -8,6 +8,9 @@ from rest_framework import status
 from cmdb.common import options
 from cmdb.models import HostBasicInfo
 from util.field import HostInfoFields
+import logging
+
+logger = logging.getLogger(__name__)
 
 jobstores = {
     'django': DjangoJobStore(),
@@ -61,6 +64,7 @@ class CollectHostInfo(object):
         payload = {'keywords': serial_no}
         try:
             r = requests.get(self.idcinfo_url, params=payload)
+            logger.info("request: %s" % r.url)
             if 'r' in dir() and r.status_code == status.HTTP_200_OK:
                 data = r.json().get('data')[0]
                 if len(data) == 0:
