@@ -13,6 +13,9 @@ class HostBasicInfo(models.Model):
     rack_id = models.CharField(max_length=32, null=True, default="", blank=True)
     num_cpu = models.CharField(max_length=10, default="")
     num_mem = models.CharField(max_length=10, default="")
+    manager_ip = models.CharField(max_length=16, default="")
+    room = models.CharField(max_length=32, null=True, default="", blank=True)
+    model = models.CharField(max_length=32, null=True, default="", blank=True)
     os_version = models.CharField(max_length=100, null=True, default="", blank=True)
     SERVER_TYPE = [('physical', 'physical'), ('virtual', 'virtual')]
     machine_type = models.CharField(max_length=10, choices=SERVER_TYPE, default="physical")
@@ -26,7 +29,10 @@ class HostBasicInfo(models.Model):
             "num_cpu": self.num_cpu,
             "num_mem": self.num_mem,
             "os_version": self.os_version,
-            "machine_type": self.machine_type
+            "machine_type": self.machine_type,
+            "manager_ip": self.manager_ip,
+            "model": self.model,
+            "room": self.room,
         }
         return host_dict
 

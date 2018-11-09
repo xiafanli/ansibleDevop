@@ -20,6 +20,9 @@ class HostBasicInfoModelSerializer(serializers.ModelSerializer):
             HostInfoFields.F_NUM_MEM,
             HostInfoFields.F_MACHINE_TYPE,
             HostInfoFields.F_OS_VERSION,
+            HostInfoFields.F_MANAGER_IP,
+            HostInfoFields.F_MODEL,
+            HostInfoFields.F_ROOM,
             HostInfoFields.F_HOST_CLUSTER,
             HostInfoFields.F_HOST_COMPNENET,
         )

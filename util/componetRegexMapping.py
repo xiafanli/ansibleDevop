@@ -49,7 +49,7 @@ COMPONENT_LIB_PATH = {
     'JobHistoryServer': ['/opt/cloudera/parcels/CDH/lib/hadoop-yarn', '/usr/lib/hadoop-yarn',
                          '/opt/huawei/Bigdata/hadoop/hadoop/share/hadoop/hdfs',
                          '/opt/huawei/Bigdata/FusionInsight/FusionInsight-Hadoop-*/hadoop/share/hadoop/hdfs',
-                         '/opt/huawei/Bigdata/FusionInsight_Current/*_JobHistoryServer/install/hadoop/share/hadoop/common'],
+                         '/opt/huawei/Bigdata/FusionInsight_Current/*_JobHistoryServer/install/hadoop/share/hadoop/yarn'],
     'HMaster': ['/opt/cloudera/parcels/CDH/lib/hbase', '/usr/lib/hbase',
                 '/opt/huawei/Bigdata/FusionInsight_Current/*_HMaster/install/hbase/lib',
                 '/opt/huawei/Bigdata/FusionInsight/FusionInsight-HBase-*/hbase/lib'],

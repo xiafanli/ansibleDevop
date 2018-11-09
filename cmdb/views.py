@@ -15,7 +15,13 @@ from django.http import JsonResponse
 from cmdb.common import options
 import json
 from django.contrib.auth.decorators import login_required
+from cmdb.scheculer.schedulers import JobScheduler
+from cmdb.scheculer.schedulers import CollectHostInfo
 
+
+task_scheduler = JobScheduler()
+task_scheduler.add_job(CollectHostInfo(options.IDC_INFO_WEB_SERVER_IP).update_host_info_from_idc, "job1", 60)
+task_scheduler.start()
 
 # view interface
 @login_required(login_url='/login')

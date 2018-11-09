@@ -1,3 +1,5 @@
+import time
+
 import requests
 import subprocess
 import json
@@ -6,6 +8,7 @@ import os
 import math
 import sys
 import glob
+import random
 
 
 from cmdb.common.requestsparam import ComponentHostMapRequestParm
@@ -187,6 +190,11 @@ def main(argv):
 
     server_ip = argv[1]
     port = argv[2]
+
+    # Prevent flooding requests to cmdb server
+    jitter = random.randint(0, 180)
+    time.sleep(jitter)
+
     host_collect = HostInfoCollect(server_ip, port)
     host_collect.push_host_info()
     ip = host_collect.data[HostInfoFields.F_HOST_IP]

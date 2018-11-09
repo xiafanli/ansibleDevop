@@ -13,6 +13,9 @@ class HostInfoFields:
     F_MACHINE_TYPE = 'machine_type'
     F_HOST_CLUSTER = 'host_cluster'
     F_HOST_COMPNENET = 'host_component'
+    F_MANAGER_IP = 'manager_ip'
+    F_MODEL = 'model'
+    F_ROOM = 'room'
 
 
 class ClusterFields:
